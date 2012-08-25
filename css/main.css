@@ -107,11 +107,9 @@ body {
 .reveal .slides section {
     line-height: 1.2em;
     font-weight: normal;
-    display: -webkit-box !important;
     -webkit-box-orient: vertical;
     -webkit-box-pack: center;
     -webkit-box-align: center;
-    display: -moz-box !important;
     -moz-box-orient: vertical;
     -moz-box-pack: center;
     -moz-box-align: center;

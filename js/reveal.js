@@ -6,6 +6,8 @@
  * Copyright (C) 2011-2012 Hakim El Hattab, http://hakim.se
  */
 var Reveal = (function(){
+
+  var vendorPrefix = navigator.userAgent.match(/WebKit/) ? "-webkit-" : "-moz-";
 	
 	var HORIZONTAL_SLIDES_SELECTOR = '.reveal .slides>section',
 		VERTICAL_SLIDES_SELECTOR = '.reveal .slides>section.present>section',
@@ -528,7 +530,7 @@ var Reveal = (function(){
 				htransform = 'translateZ(-2500px) translate(' + ( ( i - indexh ) * 105 ) + '%, 0%)';
 			
 			hslide.setAttribute( 'data-index-h', i );
-			hslide.style.display = 'block';
+			hslide.style.display = vendorPrefix + "box";
 			hslide.style.WebkitTransform = htransform;
 			hslide.style.MozTransform = htransform;
 			hslide.style.msTransform = htransform;
@@ -548,7 +550,7 @@ var Reveal = (function(){
 
 				vslide.setAttribute( 'data-index-h', i );
 				vslide.setAttribute( 'data-index-v', j );
-				vslide.style.display = 'block';
+				vslide.style.display = vendorPrefix + "box";
 				vslide.style.WebkitTransform = vtransform;
 				vslide.style.MozTransform = vtransform;
 				vslide.style.msTransform = vtransform;
@@ -659,7 +661,7 @@ var Reveal = (function(){
 					// and last slides
 					var distance = Math.abs( ( index - i ) % ( slidesLength - 3 ) ) || 0;
 
-					slide.style.display = distance > 3 ? 'none' : 'block';
+					slide.style.display = distance > 3 ? 'none' : (vendorPrefix + "box");
 				}
 
 				slides[i].classList.remove( 'past' );
