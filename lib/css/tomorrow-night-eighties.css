@@ -2,8 +2,6 @@
 /* Original theme - https://github.com/chriskempson/tomorrow-theme */
 /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
 
-@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono);
-
 code {
     background: #2d2d2d;
     color: #ccc;
