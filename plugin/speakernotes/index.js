@@ -4,10 +4,11 @@ var io        = require('socket.io');
 var _         = require('underscore');
 var Mustache  = require('mustache');
 
-var app       = express.createServer();
+var app       = express();
+var server    = require('http').createServer(app);
 var staticDir = express.static;
 
-io            = io.listen(app);
+io            = io.listen(server);
 
 var opts = {
 	port :      1947,
@@ -41,7 +42,7 @@ app.get("/notes/:socketId", function(req, res) {
 });
 
 // Actually listen
-app.listen(opts.port || null);
+server.listen(opts.port || null);
 
 var brown = '\033[33m', 
 	green = '\033[32m', 
