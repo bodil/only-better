@@ -15,10 +15,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/theme/default.css">
-
-    <!-- For syntax highlighting -->
-    <link rel="stylesheet" href="plugin/prettify/css/bubbleberry.css">
+    <link rel="stylesheet/less" href="css/theme/raspberrymint.less">
 
     <script>
       // If the query includes 'print-pdf' we'll use the PDF print sheet
@@ -28,6 +25,8 @@
     <!--[if lt IE 9]>
     <script src="lib/js/html5shiv.js"></script>
     <![endif]-->
+
+    <script type="text/javascript" src="lib/js/less.js"></script>
   </head>
 
   <body>
@@ -129,13 +128,14 @@
 
           For those of you who like that sort of thing. Instructions and a bit more info available [here](https://github.com/hakimel/reveal.js#markdown).
 
-          <pre><code contenteditable style="margin-top: 20px;">&lt;section data-markdown&gt;
+```html
+&lt;section data-markdown&gt;
   ## Markdown support
 
   For those of you who like that sort of thing.
   Instructions and a bit more info available [here](https://github.com/hakimel/reveal.js#markdown).
 &lt;/section&gt;
-          </code></pre>
+```
         </section>
 
         <section>
@@ -285,6 +285,7 @@
         controls: true,
         progress: true,
         history: true,
+        rollingLinks: false,
 
         transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/linear(2d)
 
@@ -298,7 +299,8 @@
             var i, els = document.querySelectorAll("code"), l = els.length, el;
             for (i = 0; i < l; i++) {
               el = els[i];
-              el.innerHTML = prettyPrintOne(el.innerHTML, el.className);
+              if (el.className !== "no-highlight")
+                el.innerHTML = prettyPrintOne(el.innerHTML, el.className);
             }
           } },
           { src: 'plugin/catnip/catnip.js', async: true, condition: function() { return window.parent !== window; } },
