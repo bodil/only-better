@@ -2,11 +2,6 @@
 /* Original theme - https://github.com/chriskempson/tomorrow-theme */
 /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
 
-code {
-    background: #2d2d2d;
-    color: #ccc;
-}
-
 .tomorrow-comment, pre .comment, pre .title {
   color: #999999;
 }

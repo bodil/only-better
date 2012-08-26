@@ -165,3 +165,12 @@ body {
     -o-transition: width 800ms cubic-bezier(0.260, 0.860, 0.440, 0.985);
     transition: width 800ms cubic-bezier(0.260, 0.860, 0.440, 0.985);
 }
+
+
+
+
+.reveal pre {
+    background: #2d2d2d;
+    color: #ccc;
+    padding: 1em;
+}

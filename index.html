@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="css/theme/default.css">
 
     <!-- For syntax highlighting -->
-    <link rel="stylesheet" href="lib/css/tomorrow-night-eighties.css">
+    <link rel="stylesheet" href="plugin/prettify/css/bubbleberry.css">
 
     <script>
       // If the query includes 'print-pdf' we'll use the PDF print sheet
@@ -202,23 +202,13 @@
 
         <section>
           <h2>Pretty Code</h2>
-          <pre><code contenteditable>
-function linkify( selector ) {
-  if( supports3DTransforms ) {
-
-    var nodes = document.querySelectorAll( selector );
-
-    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-      var node = nodes[i];
-
-      if( !node.className ) ) {
-        node.className += ' roll';
-      }
-    };
-  }
-}
-          </code></pre>
-          <p>Courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
+          <pre><code class="clj">;; Memoised Fibonacci the easy way
+(defn fib
+  "Calculates the nth Fibonacci number."
+  [n]
+  (if (< n 2) n
+    (+ (fib (-n 1)) (fib (- n 2))))))
+(def fib (memoize fib))</code></pre>
         </section>
 
         <section>
@@ -300,10 +290,17 @@ function linkify( selector ) {
 
         // Optional libraries used to extend on reveal.js
         dependencies: [
-          { src: 'lib/js/highlight.js', async: true, callback: function() { window.hljs.initHighlightingOnLoad(); } },
+          // { src: 'lib/js/highlight.js', async: true, callback: function() { window.hljs.initHighlightingOnLoad(); } },
           { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
           { src: 'lib/js/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
           { src: 'lib/js/data-markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/prettify/prettify.js', async: true, callback: function() {
+            var i, els = document.querySelectorAll("code"), l = els.length, el;
+            for (i = 0; i < l; i++) {
+              el = els[i];
+              el.innerHTML = prettyPrintOne(el.innerHTML, el.className);
+            }
+          } },
           { src: 'plugin/catnip/catnip.js', async: true, condition: function() { return window.parent !== window; } },
           { src: 'socket.io/socket.io.js', async: true, condition: function() { return window.location.host === 'localhost:1947'; } },
           { src: 'plugin/speakernotes/client.js', async: true, condition: function() { return window.location.host === 'localhost:1947'; } },
