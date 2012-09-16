@@ -12,17 +12,32 @@
         }
       });
       if (catnipFrame)
-        catnipFrame.postMessage(command,"*");
+        catnipFrame.postMessage(command, "*");
       else
         consoleBacklog.push(command);
     }
   };
 
+  var lastUrl = window.location.href;
+
+  window.setInterval(function() {
+    var currentUrl = window.location.href;
+    if (currentUrl != lastUrl) {
+      lastUrl = currentUrl;
+      if (catnipFrame) {
+        var command = "client-frame:" + JSON.stringify({
+          url: lastUrl
+        });
+        catnipFrame.postMessage(command, "*");
+      }
+    }
+  }, 100);
+
   window.addEventListener("message", function(event) {
     if (event.data === "hello") {
       catnipFrame = event.source;
       consoleBacklog.forEach(function(item) {
-        catnipFrame.postMessage(item, "*");
+        catnipFrame.postMessage(JSON.stringify(item), "*");
       });
       consoleBacklog = [];
     } else if (event.data === "nextSlide") {
