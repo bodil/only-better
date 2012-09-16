@@ -250,6 +250,7 @@ body {
     font-size: 0.6em;
     line-height: 1em;
     vertical-align: top;
+    // display: inline-block;
 }
 
 .reveal small * {

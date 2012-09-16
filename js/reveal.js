@@ -1,5 +1,5 @@
 /*!
- * reveal.js 2.0 r20
+ * reveal.js 2.0 r23
  * http://lab.hakim.se/reveal-js
  * MIT licensed
  * 
@@ -40,6 +40,9 @@ var Reveal = (function(){
 
 			// Apply a 3D roll to links on hover
 			rollingLinks: true,
+
+			// Transition style (see /css/theme)
+			theme: 'default', 
 
 			// Transition style
 			transition: 'default', // default/cube/page/concave/linear(2d),
@@ -113,6 +116,7 @@ var Reveal = (function(){
 		extend( config, options );
 
 		// Cache references to DOM elements
+		dom.theme = document.querySelector( '#theme' );
 		dom.wrapper = document.querySelector( '.reveal' );
 		dom.progress = document.querySelector( '.reveal .progress' );
 		dom.progressbar = document.querySelector( '.reveal .progress span' );
@@ -224,6 +228,18 @@ var Reveal = (function(){
 			dom.progress.style.display = 'block';
 		}
 
+		// Load the theme in the config, if it's not already loaded
+		if( config.theme && dom.theme ) {
+			var themeURL = dom.theme.getAttribute( 'href' );
+			var themeFinder = /[^/]*?(?=\.css)/;
+			var themeName = themeURL.match(themeFinder)[0];
+			if(  config.theme !== themeName ) {
+				themeURL = themeURL.replace(themeFinder, config.theme);
+				dom.theme.setAttribute( 'href', themeURL );
+			}
+		}
+
+
 		if( config.transition !== 'default' ) {
 			dom.wrapper.classList.add( config.transition );
 		}
@@ -326,12 +342,9 @@ var Reveal = (function(){
 	 * @param {Object} event
 	 */
 	function onDocumentKeyDown( event ) {
-		// FFT: Use document.querySelector( ':focus' ) === null 
-		// instead of checking contentEditable?
-
 		// Disregard the event if the target is editable or a 
 		// modifier is present
-		if ( event.target.contentEditable != 'inherit' || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey ) return;
+		if ( document.querySelector( ':focus' ) !== null || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey ) return;
 				
 		var triggered = false;
 
@@ -1133,4 +1146,3 @@ var Reveal = (function(){
 	};
 	
 })();
-

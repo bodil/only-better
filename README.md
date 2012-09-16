@@ -10,6 +10,14 @@ reveal.js comes with a broad range of features including [nested slides](https:/
 - [Examples](https://github.com/hakimel/reveal.js/wiki/Example-Presentations): Presentations created with reveal.js, add your own!
 - [Browser Support](https://github.com/hakimel/reveal.js/wiki/Changelog): Explanation of browser support and fallbacks.
 
+The framework is and will remain free. Donations are available as an optional way of supporting the project. Proceeds go towards futher development, hosting and domain costs for reveal.js and rvl.io.
+
+[![Click here to lend your support to: reveal.js and make a donation at www.pledgie.com !](http://www.pledgie.com/campaigns/18182.png?skin_name=chrome)](http://www.pledgie.com/campaigns/18182)
+
+## rvl.io
+
+Slides are written using HTML or markdown but there's also an online editor for those of you who prefer a more traditional user interface. Give it a try at [www.rvl.io](http://www.rvl.io).
+
 
 ## Instructions
 
@@ -96,7 +104,7 @@ Reveal.initialize({
 		{ src: 'lib/js/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 		// Speaker notes support
 		{ src: 'plugin/speakernotes/client.js', async: true, condition: function() { return window.location.host === 'localhost:1947'; } },
-		{ src: 'socket.io/socket.io.js', async: true, condition: function() { return window.location.host === 'localhost:1947'; } },
+		{ src: '/socket.io/socket.io.js', async: true, condition: function() { return window.location.host === 'localhost:1947'; } },
 	]
 });
 ```
