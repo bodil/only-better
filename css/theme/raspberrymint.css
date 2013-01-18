@@ -11,10 +11,10 @@ body {
   font-weight: 200;
   letter-spacing: -0.02em;
   color: #2b151c;
-  background: #c1d9c2;
+  background: #fafaf5;
 }
 .reveal section {
-  background: #fafaf5;
+  background: #fff;
   border-radius: 0.2em;
 }
 .reveal h1,
