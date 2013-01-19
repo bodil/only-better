@@ -35,6 +35,7 @@
         <section>
           <h1>I CAN HAS</h1>
           <h2>✤ LIVE JS REPL ✤</h2>
+          <p>Press Alt-PageDown to advance</p>
         </section>
 
         <section>
@@ -51,16 +52,18 @@ function add() {
 }
 
 partial(add, 10)(5);
+//!! Press Ctrl-S to evaluate the buffer
           </pre>
         </section>
 
         <section>
           <pre class="repl">
-            var sue_me_sanrio = function() {
-              return "Hello Kitty!";
-            };
-
-            sue_me_sanrio();
+            (function mandelbrot() {
+              var o=[],l,c="\u2588\u2593\u2592\u2591 \u2588";
+              for(Im=-1.2;Im<=1.2;Im+=.14){l="";for(Re=-2;Re<=1;Re+=.06){
+              var Zr=Re,Zi=Im,n=0;for(;n<20;n++){var Zr2=Zr*Zr,Zi2=Zi*Zi;
+              if(Zr2+Zi2>4)break;Zi=2*Zr*Zi+Im;Zr=Zr2-Zi2+Re;}
+              l+=c[Math.ceil(n/4)];}o.push(l);}return o;})();
           </pre>
         </section>
 
@@ -102,7 +105,7 @@ partial(add, 10)(5);
           { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
           { src: 'plugin/catnip/catnip.js', async: true, condition: function() { return window.parent !== window; } },
           { src: 'plugin/repl/ace/ace.js', async: true },
-          { src: 'plugin/repl/esprima.js', async: true },
+          { src: 'plugin/repl/acorn.js', async: true },
           { src: 'plugin/repl/repl.js', async: true }
           // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
         ]

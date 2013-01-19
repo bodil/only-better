@@ -16,21 +16,22 @@
     var ast, code, exprs, val, out = "", pos = 0, errors = false;
     code = editor.getValue().replace(/^\/\/.*(\n|$)/gm, "");
     try {
-      ast = esprima.parse(code, {range: true, tolerant: true});
+      ast = acorn.parse(code);
     } catch (e) {
-      code = code.split("\n");
-      out = code.slice(0, e.lineNumber)
-        .concat("//!! " + e.description)
-        .concat(code.slice(e.lineNumber));
-      editor.setValue(out.join("\n"), 1);
-      editor.selection.moveCursorTo(e.lineNumber - 1, e.column);
+      pos = e.pos;
+      while (pos < code.length && code[pos] !== "\n") pos++;
+      pos++;
+      out = code.slice(0, pos)
+        + "//!! " + e.name + ": " + e.message + "\n"
+        + code.slice(pos);
+      editor.setValue(out, 1);
+      editor.gotoLine(e.loc.line, e.loc.column, true);
       flashEditor(editor, "error");
       return;
     }
     exprs = ast.body;
     exprs.forEach(function(expr) {
-      while (code[expr.range[1] - 1] === "\n") expr.range[1]--;
-      expr.src = code.slice(expr.range[0], expr.range[1]);
+      expr.src = code.slice(expr.start, expr.end);
     });
 
     (function(__exprs) {
@@ -39,22 +40,20 @@
         try {
           __exprs[__i].result = eval(__exprs[__i].src);
         } catch (e) {
-          console.log(e);
           __exprs[__i].error = e.name + ": " + e.message;
         }
       }
     })(exprs);
 
     exprs.forEach(function(expr) {
-      out += code.slice(pos, expr.range[1]);
-      pos = expr.range[1];
+      out += code.slice(pos, expr.end);
+      pos = expr.end;
       if (expr.error !== undefined) {
         out += "\n//=> " + expr.error;
         errors = true;
       } else if (expr.result !== undefined) {
         val = typeof expr.result === "function" ? describeFunction(expr.result)
-          : JSON.stringify(expr.result);
-        console.log(val);
+          : JSON.stringify(expr.result, null, 2);
         out += "\n//=> " + val.split("\n").join("\n//=> ");
       }
     });
@@ -74,6 +73,8 @@
     editor.session.setNewLineMode("unix");
     editor.session.setTabSize(2);
     editor.session.setUseSoftTabs(true);
+    editor.session.setUseWrapMode(true);
+    editor.session.setUseWorker(false);
     editor.setDisplayIndentGuides(false);
 
     editor.commands.addCommand({
@@ -115,7 +116,7 @@
   var alignIndents = function(text) {
     var indent = minIndent(text);
     return text.split("\n").map(function(line) {
-      return line.slice(indent);
+      return line.slice(indent).trimRight();
     }).join("\n");
   };
 
@@ -134,6 +135,7 @@
     repl.innerHTML = pre.innerHTML;
     pre.parentNode.appendChild(repl);
     window.editor = pre.editor = createEditor(repl);
+    pre.editor.focus();
   };
 
   var uninstallRepl = function(pre) {
@@ -165,6 +167,17 @@
     forEach(document.querySelectorAll("pre.repl"), function(pre) {
       pre.innerHTML = cleanText(pre.innerHTML);
     });
+
+    document.addEventListener("keydown", function(e) {
+      console.log("keycode", e.keyCode);
+      if (e.altKey && e.keyCode == 33) {
+        Reveal.navigatePrev();
+        e.preventDefault();
+      } else if (e.altKey && e.keyCode == 34) {
+        Reveal.navigateNext();
+        e.preventDefault();
+      }
+    }, false);
 
     var currentRepl = findRepl(Reveal.getCurrentSlide());
     if (currentRepl) installRepl(currentRepl);
