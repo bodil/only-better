@@ -60,10 +60,10 @@ partial(add, 10)(5);
           <pre class="repl">
             (function mandelbrot() {
               var o=[],l,c="\u2588\u2593\u2592\u2591 \u2588";
-              for(Im=-1.2;Im<=1.2;Im+=.14){l="";for(Re=-2;Re<=1;Re+=.06){
+              for(Im=-1.2;Im<=1.2;Im+=.13){l="";for(Re=-2;Re<=1;Re+=.052){
               var Zr=Re,Zi=Im,n=0;for(;n<20;n++){var Zr2=Zr*Zr,Zi2=Zi*Zi;
               if(Zr2+Zi2>4)break;Zi=2*Zr*Zi+Im;Zr=Zr2-Zi2+Re;}
-              l+=c[Math.ceil(n/4)];}o.push(l);}return o;})();
+              l+=c[Math.round(n/4)];}o.push(l);}return o;})();
           </pre>
         </section>
 
