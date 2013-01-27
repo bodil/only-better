@@ -21,9 +21,9 @@
       pos = e.pos;
       while (pos < code.length && code[pos] !== "\n") pos++;
       pos++;
-      out = code.slice(0, pos)
-        + "//!! " + e.name + ": " + e.message + "\n"
-        + code.slice(pos);
+      out = code.slice(0, pos) +
+        "//!! " + e.name + ": " + e.message + "\n" +
+        code.slice(pos);
       editor.setValue(out, 1);
       editor.gotoLine(e.loc.line, e.loc.column, true);
       flashEditor(editor, "error");
