@@ -36,7 +36,8 @@
       expr.src = code.slice(expr.start, expr.end);
     });
 
-    (function(__exprs) {
+    (function(__exprs, __context) {
+      eval(__context);
       var __i = 0, __l = __exprs.length;
       for (; __i < __l; __i++) {
         try {
@@ -45,7 +46,7 @@
           __exprs[__i].error = e.name + ": " + e.message;
         }
       }
-    })(exprs);
+    })(exprs, editor.jsContext);
 
     exprs.forEach(function(expr) {
       out += code.slice(pos, expr.end);
@@ -129,7 +130,7 @@
     return text + "\n";
   };
 
-  var installRepl = function(pre) {
+  var installRepl = function(pre, context) {
     pre.classList.add("active");
 
     var repl = pre.repl = document.createElement("div");
@@ -137,6 +138,7 @@
     repl.innerHTML = pre.innerHTML;
     pre.parentNode.appendChild(repl);
     window.editor = pre.editor = createEditor(repl);
+    pre.editor.jsContext = context;
     pre.editor.focus();
   };
 
@@ -151,6 +153,11 @@
 
   var findRepl = function(slide) {
     return slide.querySelector("pre.repl");
+  };
+
+  var findContext = function(slide) {
+    var pre = slide.querySelector("pre.context");
+    return pre ? pre.innerHTML : "";
   };
 
   var forEach = function(seq, fn) {
@@ -182,7 +189,8 @@
     }, false);
 
     var currentRepl = findRepl(Reveal.getCurrentSlide());
-    if (currentRepl) installRepl(currentRepl);
+    if (currentRepl)
+      installRepl(currentRepl, findContext(Reveal.getCurrentSlide()));
 
     var replTimer = null;
 

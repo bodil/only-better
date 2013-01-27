@@ -4,6 +4,10 @@ pre.repl, div.live-repl {
     line-height: 28px;
 }
 
+pre.context {
+    display: none;
+}
+
 pre.repl {
     width: 832px;
     height: 600px;
