@@ -37,8 +37,8 @@
     });
 
     (function(__exprs, __context) {
-      eval(__context);
       var __i = 0, __l = __exprs.length;
+      eval(__context);
       for (; __i < __l; __i++) {
         try {
           __exprs[__i].result = eval(__exprs[__i].src);
