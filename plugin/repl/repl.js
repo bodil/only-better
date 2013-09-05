@@ -1,10 +1,14 @@
-/*jshint evil:true */
+/*global Reveal:true, window:true, document:true, setTimeout:true,
+  ace:true, console:true, socket */
 
 (function() {
 
-  var describeFunction = function(fn) {
-    var sig = fn.toString(), i = sig.indexOf("{");
-    return sig.slice(0, i);
+  var socket = io.connect(window.location.origin + "/repl");
+
+  var commentify = function(prefix, msg) {
+    return msg.split("\n").map(function(s) {
+      return "//" + prefix + " " + s;
+    }).join("\n");
   };
 
   var flashEditor = function(editor, type) {
@@ -14,31 +18,57 @@
     }, 50);
   };
 
-  var evaluateExpAtPoint = function(editor) {
-    var ast, code, exprs, val, out = "", pos = 0, errors = false;
-    code = editor.getValue().replace(/^\/\/.*(\n|$)/gm, "");
-    try {
-      ast = acorn.parse(code);
-    } catch (e) {
-      pos = e.pos;
-      while (pos < code.length && code[pos] !== "\n") pos++;
-      pos++;
-      out = code.slice(0, pos) +
-        "//!! " + e.name + ": " + e.message + "\n" +
-        code.slice(pos);
+  var splitBuffer = function(buffer) {
+    return buffer.split(/\n\n+/).map(function(s) { return s.trimRight() + "\n"; })
+      .filter(function(s) { return s.trim().length > 0; });
+  };
+
+  var evalBuffer = function(editor) {
+    socket.emit("eval", {
+      language: editor.codeLanguage,
+      context: splitBuffer(editor.codeContext),
+      code: splitBuffer(editor.getValue().replace(/^\/\/.*(\n|$)/gm, ""))
+    }, function(res) {
+      console.log(res);
+    });
+  };
+
+  var evaluateExpAtPointOld = function(editor) {
+    var compiled, exprs, val, out = "", pos = 0, errors = false,
+        context = editor.jsContext || "",
+        code = editor.getValue().replace(/^\/\/.*(\n|$)/gm, "");
+
+    compiled = tsCompile(context + code);
+    exprs = compiled.exprs;
+
+    if (compiled.errors.length) {
+      exprs.forEach(function(expr) {
+        var end = expr.ast.limChar - offset;
+        if (end < 0) {
+          expr.errors.forEach(function(error) {
+            var pos = posForOffset(context, error.start);
+            console.error("In context: " + pos.row + ":" + pos.col +
+                          ": " + error.msg);
+          });
+          return;
+        }
+        out += code.slice(pos, end);
+        pos = end;
+        if (expr.errors.length) {
+          expr.errors.forEach(function(error) {
+            out += "\n" + commentify("!!", error.msg);
+          });
+        }
+      });
       editor.setValue(out, 1);
-      editor.gotoLine(e.loc.line, e.loc.column, true);
+      pos = posForOffset(code, compiled.errors[0].start - offset);
+      editor.gotoLine(pos.row, pos.col, true);
       flashEditor(editor, "error");
       return;
     }
-    exprs = ast.body;
-    exprs.forEach(function(expr) {
-      expr.src = code.slice(expr.start, expr.end);
-    });
 
-    (function(__exprs, __context) {
+    (function(__exprs) {
       var __i = 0, __l = __exprs.length;
-      eval(__context);
       for (; __i < __l; __i++) {
         try {
           __exprs[__i].result = eval(__exprs[__i].src);
@@ -46,18 +76,20 @@
           __exprs[__i].error = e.name + ": " + e.message;
         }
       }
-    })(exprs, editor.jsContext);
+    })(exprs);
 
     exprs.forEach(function(expr) {
-      out += code.slice(pos, expr.end);
-      pos = expr.end;
+      var end = expr.ast.limChar - offset;
+      if (end < 0) return;
+      while (code[end-1] === "\n" || code[end-1] === " ") end--;
+      out += code.slice(pos, end);
+      pos = end;
       if (expr.error !== undefined) {
         out += "\n//=> " + expr.error;
         errors = true;
       } else if (expr.result !== undefined) {
-        val = typeof expr.result === "function" ? describeFunction(expr.result)
-          : JSON.stringify(expr.result, null, 2);
-        out += "\n//=> " + val.split("\n").join("\n//=> ");
+        val = stringify(expr.result);
+        out += "\n" + commentify("=>", val);
       }
     });
 
@@ -68,11 +100,12 @@
     editor.selection.moveCursorToPosition(pos);
   };
 
-  var createEditor = function(el) {
+  var createEditor = function(el, lang) {
     var editor = ace.edit(el);
-    editor.setTheme("ace/theme/dawn");
+    editor.codeLanguage = lang;
+    editor.setTheme("ace/theme/xcode");
     editor.renderer.setShowGutter(false);
-    editor.session.setMode("ace/mode/javascript");
+    editor.session.setMode("ace/mode/" + lang);
     editor.session.setNewLineMode("unix");
     editor.session.setTabSize(2);
     editor.session.setUseSoftTabs(true);
@@ -81,9 +114,9 @@
     editor.setDisplayIndentGuides(false);
 
     editor.commands.addCommand({
-      name: "evaluateExpAtPoint",
+      name: "evalBuffer",
       bindKey: "Ctrl-S",
-      exec: function() { evaluateExpAtPoint(editor); }
+      exec: function() { evalBuffer(editor); }
     });
 
     editor.commands.addCommand({
@@ -104,11 +137,17 @@
       exec: function() { editor.selection.moveCursorLineEnd(); }
     });
 
+    // editor.commands.addCommand({
+    //   name: "forLoop",
+    //   bindKey: "Ctrl-F",
+    //   exec: function() { editor.insert("for (i = 0; i < list.length; i++) {}");
+    //               editor.selection.moveCursorLeft(); }
+    // });
+
     return editor;
   };
 
   var minIndent = function(text) {
-    var lines = text.split("\n");
     return text.split("\n").reduce(function(min, line) {
       if (line.trim().length === 0) return min;
       var indent = line.length - line.trimLeft().length;
@@ -133,12 +172,14 @@
   var installRepl = function(pre, context) {
     pre.classList.add("active");
 
+    var lang = pre.dataset.lang;
+
     var repl = pre.repl = document.createElement("div");
     repl.classList.add("live-repl");
     repl.innerHTML = pre.innerHTML;
     pre.parentNode.appendChild(repl);
-    window.editor = pre.editor = createEditor(repl);
-    pre.editor.jsContext = context;
+    window.editor = pre.editor = createEditor(repl, lang);
+    pre.editor.codeContext = context;
     pre.editor.focus();
   };
 
@@ -178,7 +219,6 @@
     });
 
     document.addEventListener("keydown", function(e) {
-      console.log("keycode", e.keyCode);
       if (e.altKey && e.keyCode == 33) {
         Reveal.navigatePrev();
         e.preventDefault();
@@ -202,7 +242,7 @@
         if (replTimer !== null) window.clearTimeout(replTimer);
         replTimer = setTimeout(function() {
           replTimer = null;
-          installRepl(currentRepl);
+          installRepl(currentRepl, findContext(Reveal.getCurrentSlide()));
         }, 1000);
       }
     });

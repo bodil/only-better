@@ -106,7 +106,7 @@
 
 		<script>
 		var socketId = '{{socketId}}';
-		var socket = io.connect(window.location.origin);
+		var socket = io.connect(window.location.origin + "/notes");
 		var notes = document.getElementById('notes');
 		var currentSlide = document.getElementById('current-slide');
 		var nextSlide = document.getElementById('next-slide');

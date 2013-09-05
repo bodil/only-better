@@ -11,46 +11,46 @@ var staticDir = express.static;
 io            = io.listen(server);
 
 var opts = {
-	port :      1947,
-	baseDir :   __dirname + '/../../'
+  port :      1947,
+  baseDir :   __dirname + '/../../'
 };
 
 io.sockets.on('connection', function(socket) {
-	socket.on('slidechanged', function(slideData) {
-		socket.broadcast.emit('slidedata', slideData);
-	});
-	socket.on('fragmentchanged', function(fragmentData) {
-		socket.broadcast.emit('fragmentdata', fragmentData);
-	});
+  socket.on('slidechanged', function(slideData) {
+    socket.broadcast.emit('slidedata', slideData);
+  });
+  socket.on('fragmentchanged', function(fragmentData) {
+    socket.broadcast.emit('fragmentdata', fragmentData);
+  });
 });
 
 app.configure(function() {
-	[ 'css', 'js', 'images', 'plugin', 'lib' ].forEach(function(dir) {
-		app.use('/' + dir, staticDir(opts.baseDir + dir));
-	});
+  [ 'css', 'js', 'images', 'plugin', 'lib' ].forEach(function(dir) {
+    app.use('/' + dir, staticDir(opts.baseDir + dir));
+  });
 });
 
 app.get("/", function(req, res) {
-	res.writeHead(200, {'Content-Type': 'text/html'});
-	fs.createReadStream(opts.baseDir + '/index.html').pipe(res);
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  fs.createReadStream(opts.baseDir + '/index.html').pipe(res);
 });
 
 app.get("/notes/:socketId", function(req, res) {
 
-	fs.readFile(opts.baseDir + 'plugin/notes-server/notes.html', function(err, data) {
-		res.send(Mustache.to_html(data.toString(), {
-			socketId : req.params.socketId
-		}));
-	});
-	// fs.createReadStream(opts.baseDir + 'notes-server/notes.html').pipe(res);
+  fs.readFile(opts.baseDir + 'plugin/notes-server/notes.html', function(err, data) {
+    res.send(Mustache.to_html(data.toString(), {
+      socketId : req.params.socketId
+    }));
+  });
+  // fs.createReadStream(opts.baseDir + 'notes-server/notes.html').pipe(res);
 });
 
 // Actually listen
 server.listen(opts.port || null);
 
 var brown = '\033[33m',
-	green = '\033[32m',
-	reset = '\033[0m';
+    green = '\033[32m',
+    reset = '\033[0m';
 
 var slidesLocation = "http://localhost" + ( opts.port ? ( ':' + opts.port ) : '' );
 

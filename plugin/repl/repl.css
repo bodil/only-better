@@ -1,7 +1,7 @@
 pre.repl, div.live-repl {
-    font-family: 'Ubuntu Mono', 'Monaco', 'Menlo', 'Consolas', 'source-code-pro', monospace !important;
-    font-size: 18pt;
-    line-height: 28px;
+    font-family: 'Inconsolata', monospace !important;
+    font-size: 26pt;
+    line-height: 32pt;
 }
 
 pre.context {
@@ -9,7 +9,7 @@ pre.context {
 }
 
 pre.repl {
-    width: 832px;
+    width: 823px;
     height: 600px;
     border: 0;
     background-color: inherit;
@@ -18,14 +18,13 @@ pre.repl {
 }
 
 pre.repl.active {
-    visibility: hidden;
+    display: none;
 }
 
 div.live-repl {
-    top: 20px;
-    left: 24px;
-    width: 852px;
-    height: 600px;
+    margin: -1em -2em;
+    width: 31.6em;
+    height: 16em;
     text-align: left;
 }
 
