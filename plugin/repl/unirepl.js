@@ -1,4 +1,4 @@
-/*global module */
+/*global module, setTimeout */
 
 var child = require("child_process"),
     events = require("events"),
@@ -49,22 +49,40 @@ var occur = function(c, s) {
 
 var wrapProcess = function(proc, repl) {
   var result = new events.EventEmitter(),
-      buf = "";
+      buf = "", err = "", errTimer = null;
 
   proc.stdout.on("data", function(chunk) {
+    var out;
+    if (err.length > 0) return;
     buf += chunk;
     if (buf.slice(buf.length - repl.prompt.length) === repl.prompt) {
       while (repl.chopPrompt &&
              buf.slice(0, repl.chopPrompt.length) === repl.chopPrompt) {
         buf = buf.slice(repl.chopPrompt.length);
       }
-      result.emit("result", buf.slice(0, buf.length - repl.prompt.length));
+      out = buf.slice(0, buf.length - repl.prompt.length);
+      console.log("REPL OUT:", out);
+      result.emit("result", {
+        value: (out.trim() === repl.nil) ? null : out
+      });
       buf = "";
     }
   });
 
-  result.on("result", function(s) {
-    console.log("REPL OUT:", s);
+  var errReport = function() {
+    errTimer = null;
+    console.log("REPL ERROR:", err);
+    result.emit("result", {
+      error: err
+    });
+    err = "";
+  };
+
+  proc.stderr.on("data", function(chunk) {
+    err += chunk;
+    if (errTimer === null) {
+      errTimer = setTimeout(errReport, 100);
+    }
   });
 
   result.close = function() {
@@ -75,7 +93,7 @@ var wrapProcess = function(proc, repl) {
     console.log("REPL IN:", data);
     proc.stdin.write(data);
     result.once("result", function(s) {
-      cb(null, (s.trim() === repl.nil) ? null : s);
+      cb(null, s);
     });
   };
 
@@ -94,7 +112,11 @@ var wrapProcess = function(proc, repl) {
 
 var createRepl = function(e, cb) {
   var repl = repls[e.language],
-      proc = child.spawn(repl.command, repl.args),
+      proc = child.spawn(repl.command, repl.args, {
+        env: {
+          TERM: "dumb"
+        }
+      }),
       p;
   proc.stdin.setEncoding("utf-8");
   proc.stdout.setEncoding("utf-8");
@@ -133,6 +155,7 @@ module.exports.run = function(e, cb) {
       if (err) return cb(err);
       mapExprs(repl, e.code, function(err, codeResults) {
         if (err) return cb(err);
+        repl.close();
         cb(null, {
           context: e.context,
           contextResults: contextResults,

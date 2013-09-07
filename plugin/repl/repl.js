@@ -62,7 +62,11 @@
       e.result.code.forEach(function(code, i) {
         var result = e.result.codeResults[i];
         out += code;
-        out += (result ? commentify(comments[editor.codeLanguage], "=>", result) : "") + "\n";
+        if (result.error) {
+          out += commentify(comments[editor.codeLanguage], "!!", result.error) + "\n";
+        } else {
+          out += (result.value ? commentify(comments[editor.codeLanguage], "=>", result.value) : "") + "\n";
+        }
       });
 
       editor.container.classList.remove("evaluating");
