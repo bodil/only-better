@@ -23,7 +23,9 @@ var repls = {
 
   clojure: {
     command: "java",
-    args: ["-jar", "clojure-1.5.1.jar"],
+    args: ["-classpath",
+           "jars/clojure-1.5.1.jar:jars/core.logic-0.8.4.jar",
+           "clojure.main"],
     prompt: "user=> ",
     chopPrompt: "  #_=> ",
     nil: "nil"
@@ -37,7 +39,7 @@ var repls = {
 
   java: {
     command: "java",
-    args: ["-jar", "javarepl.jar", "-d"],
+    args: ["-jar", "jars/javarepl.jar", "-d"],
     prompt: "java> ",
     chopPrompt: "    | "
   }
@@ -122,10 +124,6 @@ var createRepl = function(e, cb) {
   proc.stdout.setEncoding("utf-8");
   proc.stderr.setEncoding("utf-8");
   p = wrapProcess(proc, repl);
-
-  proc.stderr.on("data", function(data) {
-    console.error("SUBPROC STDERR:", data);
-  });
 
   // Wait for initial prompt, then send preamble, then signal readiness.
   p.once("result", function() {
