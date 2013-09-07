@@ -5,9 +5,12 @@
 
   var socket = io.connect(window.location.origin + "/repl");
 
-  var commentify = function(prefix, msg) {
+  var commentify = function(comment, prefix, msg) {
     return msg.split("\n").map(function(s) {
-      return "//" + prefix + " " + s;
+      if (typeof comment === "string")
+        return s.length ? comment + prefix + " " + s : "";
+      else
+        return s.length ? comment[0] + prefix + " " + s + " " + comment[1] : "";
     }).join("\n");
   };
 
@@ -28,8 +31,18 @@
       language: editor.codeLanguage,
       context: splitBuffer(editor.codeContext),
       code: splitBuffer(editor.getValue().replace(/^\/\/.*(\n|$)/gm, ""))
-    }, function(res) {
-      console.log(res);
+    }, function(e) {
+      var out = "", pos = editor.selection.getCursor();
+      e.result.code.forEach(function(code, i) {
+        var result = e.result.codeResults[i];
+        out += code;
+        out += (result ? commentify(e.result.comment, "=>", result) : "") + "\n";
+      });
+
+      flashEditor(editor, "success");
+
+      editor.setValue(out, 1);
+      editor.selection.moveCursorToPosition(pos);
     });
   };
 

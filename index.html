@@ -41,22 +41,71 @@
 
         <section>
           <pre class="repl" data-lang="haskell">
-            let fac 0 = 1
-                fac n = n * fac (n-1)
+            let fib 0 = 0
+                fib 1 = 1
+                fib n = fib (n-1) + fib (n-2)
 
-            fac 5
+            fib 5
 
-            fac 10
+            fib 10
           </pre>
         </section>
 
         <section>
           <pre class="repl" data-lang="javascript">
-            function hai(lol) {
-              return "hai " + lol;
+            function fib(n) {
+              if (n < 2) return n;
+              return fib(n-1) + fib(n-2);
             }
 
-            hai("lol");
+            fib(5);
+
+            fib(10);
+          </pre>
+        </section>
+
+        <section>
+          <pre class="repl" data-lang="clojure">
+            (defn fib [n]
+             (cond
+              (< n 2) n
+              :else (+ (fib (- n 1)) (fib (- n 2)))))
+
+            (fib 5)
+
+            (fib 10)
+          </pre>
+        </section>
+
+        <section>
+          <pre class="repl" data-lang="ocaml">
+            let rec fib = function
+              | 0 -> 0
+              | 1 -> 1
+              | n -> fib (n-1) + fib (n-2)
+              ;;
+
+            fib 5;;
+
+            fib 10;;
+          </pre>
+        </section>
+
+        <section>
+          <pre class="repl" data-lang="java">
+            class Fib {
+              public static int fib(int n) {
+                if (n < 2) {
+                  return n;
+                } else {
+                  return fib(n-1) + fib(n-2);
+                }
+              }
+            }
+
+            Fib.fib(5);
+
+            Fib.fib(10);
           </pre>
         </section>
 

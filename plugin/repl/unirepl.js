@@ -10,14 +10,41 @@ var repls = {
     preamble: [":set +m\n"],
     prompt: "Prelude> ",
     chopPrompt: "Prelude| ",
-    appendIfMulti: "\n"
+    appendIfMulti: "\n",
+    comment: "--"
   },
 
   javascript: {
     command: "node",
     args: ["-i"],
     prompt: "> ",
-    chopPrompt: "... "
+    chopPrompt: "... ",
+    nil: "undefined",
+    comment: "//"
+  },
+
+  clojure: {
+    command: "java",
+    args: ["-jar", "clojure-1.5.1.jar"],
+    prompt: "user=> ",
+    chopPrompt: "  #_=> ",
+    nil: "nil",
+    comment: ";;"
+  },
+
+  ocaml: {
+    command: "ocaml",
+    prompt: "# ",
+    chopPrompt: "  ",
+    comment: ["(*", "*)"]
+  },
+
+  java: {
+    command: "java",
+    args: ["-jar", "javarepl.jar", "-d"],
+    prompt: "java> ",
+    chopPrompt: "    | ",
+    comment: "//"
   }
 };
 
@@ -53,7 +80,7 @@ var wrapProcess = function(proc, repl) {
     console.log("REPL IN:", data);
     proc.stdin.write(data);
     result.once("result", function(s) {
-      cb(null, s);
+      cb(null, (s.trim() === repl.nil) ? null : s);
     });
   };
 
@@ -64,6 +91,8 @@ var wrapProcess = function(proc, repl) {
     }
     result.sendRaw(data, cb);
   };
+
+  result.options = repl;
 
   return result;
 };
@@ -113,7 +142,8 @@ module.exports.run = function(e, cb) {
           context: e.context,
           contextResults: contextResults,
           code: e.code,
-          codeResults: codeResults
+          codeResults: codeResults,
+          comment: repl.options.comment
         });
       });
     });
