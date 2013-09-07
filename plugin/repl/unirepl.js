@@ -10,8 +10,7 @@ var repls = {
     preamble: [":set +m\n"],
     prompt: "Prelude> ",
     chopPrompt: "Prelude| ",
-    appendIfMulti: "\n",
-    comment: "--"
+    appendIfMulti: "\n"
   },
 
   javascript: {
@@ -19,8 +18,7 @@ var repls = {
     args: ["-i"],
     prompt: "> ",
     chopPrompt: "... ",
-    nil: "undefined",
-    comment: "//"
+    nil: "undefined"
   },
 
   clojure: {
@@ -28,23 +26,20 @@ var repls = {
     args: ["-jar", "clojure-1.5.1.jar"],
     prompt: "user=> ",
     chopPrompt: "  #_=> ",
-    nil: "nil",
-    comment: ";;"
+    nil: "nil"
   },
 
   ocaml: {
     command: "ocaml",
     prompt: "# ",
-    chopPrompt: "  ",
-    comment: ["(*", "*)"]
+    chopPrompt: "  "
   },
 
   java: {
     command: "java",
     args: ["-jar", "javarepl.jar", "-d"],
     prompt: "java> ",
-    chopPrompt: "    | ",
-    comment: "//"
+    chopPrompt: "    | "
   }
 };
 
@@ -142,8 +137,7 @@ module.exports.run = function(e, cb) {
           context: e.context,
           contextResults: contextResults,
           code: e.code,
-          codeResults: codeResults,
-          comment: repl.options.comment
+          codeResults: codeResults
         });
       });
     });

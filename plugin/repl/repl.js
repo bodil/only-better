@@ -1,7 +1,15 @@
 /*global Reveal:true, window:true, document:true, setTimeout:true,
-  ace:true, console:true, socket */
+  ace:true, console:true, socket, io */
 
 (function() {
+
+  var comments = {
+    java: "//",
+    javascript: "//",
+    ocaml: ["(*", "*)"],
+    haskell: "--",
+    clojure: ";;"
+  };
 
   var socket = io.connect(window.location.origin + "/repl");
 
@@ -11,6 +19,14 @@
         return s.length ? comment + prefix + " " + s : "";
       else
         return s.length ? comment[0] + prefix + " " + s + " " + comment[1] : "";
+    }).join("\n");
+  };
+
+  var decommentify = function(language, s) {
+    var comment = comments[language];
+    return s.split("\n").filter(function(s) {
+      var c = (typeof comment === "string") ? comment : comment[0];
+      return s.slice(0, c.length) !== c;
     }).join("\n");
   };
 
@@ -26,91 +42,36 @@
       .filter(function(s) { return s.trim().length > 0; });
   };
 
+  var loading = function(language, exprs) {
+    return exprs.concat([""]).join(commentify(comments[language], "...", "evaluating") + "\n\n");
+  };
+
   var evalBuffer = function(editor) {
+    var code = splitBuffer(decommentify(editor.codeLanguage, editor.getValue())),
+        pos = editor.selection.getCursor();
+    editor.setValue(loading(editor.codeLanguage, code), 1);
+    editor.selection.moveCursorToPosition(pos);
+    editor.setReadOnly(true);
+    editor.container.classList.add("evaluating");
     socket.emit("eval", {
       language: editor.codeLanguage,
       context: splitBuffer(editor.codeContext),
-      code: splitBuffer(editor.getValue().replace(/^\/\/.*(\n|$)/gm, ""))
+      code: code
     }, function(e) {
-      var out = "", pos = editor.selection.getCursor();
+      var out = "";
       e.result.code.forEach(function(code, i) {
         var result = e.result.codeResults[i];
         out += code;
-        out += (result ? commentify(e.result.comment, "=>", result) : "") + "\n";
+        out += (result ? commentify(comments[editor.codeLanguage], "=>", result) : "") + "\n";
       });
 
-      flashEditor(editor, "success");
-
+      editor.container.classList.remove("evaluating");
+      editor.setReadOnly(false);
       editor.setValue(out, 1);
       editor.selection.moveCursorToPosition(pos);
+
+      flashEditor(editor, "success");
     });
-  };
-
-  var evaluateExpAtPointOld = function(editor) {
-    var compiled, exprs, val, out = "", pos = 0, errors = false,
-        context = editor.jsContext || "",
-        code = editor.getValue().replace(/^\/\/.*(\n|$)/gm, "");
-
-    compiled = tsCompile(context + code);
-    exprs = compiled.exprs;
-
-    if (compiled.errors.length) {
-      exprs.forEach(function(expr) {
-        var end = expr.ast.limChar - offset;
-        if (end < 0) {
-          expr.errors.forEach(function(error) {
-            var pos = posForOffset(context, error.start);
-            console.error("In context: " + pos.row + ":" + pos.col +
-                          ": " + error.msg);
-          });
-          return;
-        }
-        out += code.slice(pos, end);
-        pos = end;
-        if (expr.errors.length) {
-          expr.errors.forEach(function(error) {
-            out += "\n" + commentify("!!", error.msg);
-          });
-        }
-      });
-      editor.setValue(out, 1);
-      pos = posForOffset(code, compiled.errors[0].start - offset);
-      editor.gotoLine(pos.row, pos.col, true);
-      flashEditor(editor, "error");
-      return;
-    }
-
-    (function(__exprs) {
-      var __i = 0, __l = __exprs.length;
-      for (; __i < __l; __i++) {
-        try {
-          __exprs[__i].result = eval(__exprs[__i].src);
-        } catch (e) {
-          __exprs[__i].error = e.name + ": " + e.message;
-        }
-      }
-    })(exprs);
-
-    exprs.forEach(function(expr) {
-      var end = expr.ast.limChar - offset;
-      if (end < 0) return;
-      while (code[end-1] === "\n" || code[end-1] === " ") end--;
-      out += code.slice(pos, end);
-      pos = end;
-      if (expr.error !== undefined) {
-        out += "\n//=> " + expr.error;
-        errors = true;
-      } else if (expr.result !== undefined) {
-        val = stringify(expr.result);
-        out += "\n" + commentify("=>", val);
-      }
-    });
-
-    flashEditor(editor, errors ? "error" : "success");
-
-    pos = editor.selection.getCursor();
-    editor.setValue(out + "\n", 1);
-    editor.selection.moveCursorToPosition(pos);
   };
 
   var createEditor = function(el, lang) {

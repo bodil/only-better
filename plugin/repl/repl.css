@@ -9,12 +9,13 @@ pre.context {
 }
 
 pre.repl {
-    width: 823px;
-    height: 600px;
+    margin: -1em -2em;
+    width: 31.7em;
+    height: 18em;
+    text-align: left;
     border: 0;
-    background-color: inherit;
-    padding: 0 28px 0 28px;
-    left: 0;
+    background-color: #fff;
+    padding: 0;
 }
 
 pre.repl.active {
@@ -23,8 +24,8 @@ pre.repl.active {
 
 div.live-repl {
     margin: -1em -2em;
-    width: 31.6em;
-    height: 16em;
+    width: 31.7em;
+    height: 18em;
     text-align: left;
 }
 
@@ -51,10 +52,18 @@ div.live-repl.flash-success .ace_text-layer {
     background-color: #cfc;
 }
 
+div.live-repl.evaluating .ace_text-layer {
+    background-color: #eee;
+}
+
 div.live-repl .ace_text-layer {
     -webkit-transition: background-color 1s ease;
     -moz-transition: background-color 1s ease;
     -ms-transition: background-color 1s ease;
     -o-transition: background-color 1s ease;
     transition: background-color 1s ease;
+}
+
+.ace_scrollbar {
+    display: none !important;
 }
