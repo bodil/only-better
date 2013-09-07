@@ -41,71 +41,62 @@
 
         <section>
           <pre class="repl" data-lang="haskell">
-            let fib 0 = 0
-                fib 1 = 1
-                fib n = fib (n-1) + fib (n-2)
+            let fac 0 = 1
+                fac n = n * fac (n-1)
 
-            fib 5
+            fac 5
 
-            fib 10
+            fac 10
           </pre>
         </section>
 
         <section>
           <pre class="repl" data-lang="javascript">
-            function fib(n) {
-              if (n < 2) return n;
-              return fib(n-1) + fib(n-2);
+            function fac(n) {
+              return (n == 0) ? 1 : n * fac(n - 1);
             }
 
-            fib(5);
+            fac(5);
 
-            fib(10);
+            fac(10);
           </pre>
         </section>
 
         <section>
           <pre class="repl" data-lang="clojure">
-            (defn fib [n]
-             (cond
-              (< n 2) n
-              :else (+ (fib (- n 1)) (fib (- n 2)))))
+            (defn fac [n]
+             (if (zero? n) 1
+               (* n (fac (dec n)))))
 
-            (fib 5)
+            (fac 5)
 
-            (fib 10)
+            (fac 10)
           </pre>
         </section>
 
         <section>
           <pre class="repl" data-lang="ocaml">
-            let rec fib = function
-              | 0 -> 0
-              | 1 -> 1
-              | n -> fib (n-1) + fib (n-2)
-              ;;
+            let rec fac = function
+              | 0 -> 1
+              | n -> n * fac (n-1);;
 
-            fib 5;;
+            fac 5;;
 
-            fib 10;;
+            fac 10;;
           </pre>
         </section>
 
         <section>
           <pre class="repl" data-lang="java">
-            class Fib {
-              public static int fib(int n) {
-                if (n < 2) {
-                  return n;
-                } else {
-                  return fib(n-1) + fib(n-2);
-                }
+            class Fac {
+              public static int fac(int n) {
+                return (n == 0) ? 1 : n * fac(n - 1);
               }
             }
 
-            Fib.fib(5);
+            Fac.fac(5);
 
-            Fib.fib(10);
+            Fac.fac(10);
           </pre>
         </section>
 
