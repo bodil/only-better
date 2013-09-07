@@ -1,1 +1,711 @@
-ace.define("ace/mode/clojure",["require","exports","module","ace/lib/oop","ace/mode/text","ace/tokenizer","ace/mode/clojure_highlight_rules","ace/mode/matching_parens_outdent","ace/range"],function(e,t,n){var r=e("../lib/oop"),i=e("./text").Mode,s=e("../tokenizer").Tokenizer,o=e("./clojure_highlight_rules").ClojureHighlightRules,u=e("./matching_parens_outdent").MatchingParensOutdent,a=e("../range").Range,f=function(){var e=new o;this.$tokenizer=new s(e.getRules()),this.$keywordList=e.$keywordList,this.$outdent=new u};r.inherits(f,i),function(){this.lineCommentStart=";",this.getNextLineIndent=function(e,t,n){var r=this.$getIndent(t),i=this.$tokenizer.getLineTokens(t,e),s=i.tokens;if(s.length&&s[s.length-1].type=="comment")return r;if(e=="start"){var o=t.match(/[\(\[]/);o&&(r+="  "),o=t.match(/[\)]/),o&&(r="")}return r},this.checkOutdent=function(e,t,n){return this.$outdent.checkOutdent(t,n)},this.autoOutdent=function(e,t,n){this.$outdent.autoOutdent(t,n)}}.call(f.prototype),t.Mode=f}),ace.define("ace/mode/clojure_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"],function(e,t,n){var r=e("../lib/oop"),i=e("./text_highlight_rules").TextHighlightRules,s=function(){var e="* *1 *2 *3 *agent* *allow-unresolved-vars* *assert* *clojure-version* *command-line-args* *compile-files* *compile-path* *e *err* *file* *flush-on-newline* *in* *macro-meta* *math-context* *ns* *out* *print-dup* *print-length* *print-level* *print-meta* *print-readably* *read-eval* *source-path* *use-context-classloader* *warn-on-reflection* + - -> ->> .. / < <= = == > &gt; >= &gt;= accessor aclone add-classpath add-watch agent agent-errors aget alength alias all-ns alter alter-meta! alter-var-root amap ancestors and apply areduce array-map aset aset-boolean aset-byte aset-char aset-double aset-float aset-int aset-long aset-short assert assoc assoc! assoc-in associative? atom await await-for await1 bases bean bigdec bigint binding bit-and bit-and-not bit-clear bit-flip bit-not bit-or bit-set bit-shift-left bit-shift-right bit-test bit-xor boolean boolean-array booleans bound-fn bound-fn* butlast byte byte-array bytes cast char char-array char-escape-string char-name-string char? chars chunk chunk-append chunk-buffer chunk-cons chunk-first chunk-next chunk-rest chunked-seq? class class? clear-agent-errors clojure-version coll? comment commute comp comparator compare compare-and-set! compile complement concat cond condp conj conj! cons constantly construct-proxy contains? count counted? create-ns create-struct cycle dec decimal? declare definline defmacro defmethod defmulti defn defn- defonce defstruct delay delay? deliver deref derive descendants destructure disj disj! dissoc dissoc! distinct distinct? doall doc dorun doseq dosync dotimes doto double double-array doubles drop drop-last drop-while empty empty? ensure enumeration-seq eval even? every? false? ffirst file-seq filter find find-doc find-ns find-var first float float-array float? floats flush fn fn? fnext for force format future future-call future-cancel future-cancelled? future-done? future? gen-class gen-interface gensym get get-in get-method get-proxy-class get-thread-bindings get-validator hash hash-map hash-set identical? identity if-let if-not ifn? import in-ns inc init-proxy instance? int int-array integer? interleave intern interpose into into-array ints io! isa? iterate iterator-seq juxt key keys keyword keyword? last lazy-cat lazy-seq let letfn line-seq list list* list? load load-file load-reader load-string loaded-libs locking long long-array longs loop macroexpand macroexpand-1 make-array make-hierarchy map map? mapcat max max-key memfn memoize merge merge-with meta method-sig methods min min-key mod name namespace neg? newline next nfirst nil? nnext not not-any? not-empty not-every? not= ns ns-aliases ns-imports ns-interns ns-map ns-name ns-publics ns-refers ns-resolve ns-unalias ns-unmap nth nthnext num number? odd? or parents partial partition pcalls peek persistent! pmap pop pop! pop-thread-bindings pos? pr pr-str prefer-method prefers primitives-classnames print print-ctor print-doc print-dup print-method print-namespace-doc print-simple print-special-doc print-str printf println println-str prn prn-str promise proxy proxy-call-with-super proxy-mappings proxy-name proxy-super push-thread-bindings pvalues quot rand rand-int range ratio? rational? rationalize re-find re-groups re-matcher re-matches re-pattern re-seq read read-line read-string reduce ref ref-history-count ref-max-history ref-min-history ref-set refer refer-clojure release-pending-sends rem remove remove-method remove-ns remove-watch repeat repeatedly replace replicate require reset! reset-meta! resolve rest resultset-seq reverse reversible? rseq rsubseq second select-keys send send-off seq seq? seque sequence sequential? set set-validator! set? short short-array shorts shutdown-agents slurp some sort sort-by sorted-map sorted-map-by sorted-set sorted-set-by sorted? special-form-anchor special-symbol? split-at split-with str stream? string? struct struct-map subs subseq subvec supers swap! symbol symbol? sync syntax-symbol-anchor take take-last take-nth take-while test the-ns time to-array to-array-2d trampoline transient tree-seq true? type unchecked-add unchecked-dec unchecked-divide unchecked-inc unchecked-multiply unchecked-negate unchecked-remainder unchecked-subtract underive unquote unquote-splicing update-in update-proxy use val vals var-get var-set var? vary-meta vec vector vector? when when-first when-let when-not while with-bindings with-bindings* with-in-str with-loading-context with-local-vars with-meta with-open with-out-str with-precision xml-seq zero? zipmap",t="throw try var def do fn if let loop monitor-enter monitor-exit new quote recur set!",n="true false nil",r=this.createKeywordMapper({keyword:t,"constant.language":n,"support.function":e},"identifier",!1," ");this.$rules={start:[{token:"comment",regex:";.*$"},{token:"keyword",regex:"[\\(|\\)]"},{token:"keyword",regex:"[\\'\\(]"},{token:"keyword",regex:"[\\[|\\]]"},{token:"keyword",regex:"[\\{|\\}|\\#\\{|\\#\\}]"},{token:"keyword",regex:"[\\&]"},{token:"keyword",regex:"[\\#\\^\\{]"},{token:"keyword",regex:"[\\%]"},{token:"keyword",regex:"[@]"},{token:"constant.numeric",regex:"0[xX][0-9a-fA-F]+\\b"},{token:"constant.numeric",regex:"[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"},{token:"constant.language",regex:"[!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+||=|!=|<=|>=|<>|<|>|!|&&]"},{token:r,regex:"[a-zA-Z_$][a-zA-Z0-9_$\\-]*\\b"},{token:"string",regex:'"',next:"string"},{token:"constant",regex:/:[^()\[\]{}'"\^%`,;\s]+/},{token:"string.regexp",regex:'/#"(?:\\.|(?:\\")|[^""\n])*"/g'}],string:[{token:"constant.language.escape",regex:"\\\\.|\\\\$"},{token:"string",regex:'[^"\\\\]+'},{token:"string",regex:'"',next:"start"}]}};r.inherits(s,i),t.ClojureHighlightRules=s}),ace.define("ace/mode/matching_parens_outdent",["require","exports","module","ace/range"],function(e,t,n){var r=e("../range").Range,i=function(){};(function(){this.checkOutdent=function(e,t){return/^\s+$/.test(e)?/^\s*\)/.test(t):!1},this.autoOutdent=function(e,t){var n=e.getLine(t),i=n.match(/^(\s*\))/);if(!i)return 0;var s=i[1].length,o=e.findMatchingBracket({row:t,column:s});if(!o||o.row==t)return 0;var u=this.$getIndent(e.getLine(o.row));e.replace(new r(t,0,t,s-1),u)},this.$getIndent=function(e){var t=e.match(/^(\s+)/);return t?t[1]:""}}).call(i.prototype),t.MatchingParensOutdent=i})
+// Generated by CoffeeScript 1.6.3
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  ace.define("ace/mode/clojure", ["require", "exports", "module", "ace/mode/text", "ace/mode/behaviour/cstyle", "ace/range", "ace/tokenizer", "ace/mode/text_highlight_rules"], function(require, exports, module) {
+
+    var textmode = require("./text"),
+        cstyle = require("./behaviour/cstyle"),
+        range = require("../range"),
+        tokenizer = require("../tokenizer"),
+        highlight = require("./text_highlight_rules");
+
+    var ClojureHighlightRules, nonalphanum, symbolchar, symbolre, symbolstarter,
+        ExtendedCljMode, Range, TextMode, Tokenizer, closeparens, empty,
+        getIndent, isfunc, openparens, spaces, unalign;
+
+    nonalphanum = "></_$*+!?#.-";
+    symbolstarter = "\\w" + nonalphanum;
+    symbolchar = "\\d" + symbolstarter;
+    symbolre = "[" + symbolstarter + "][" + symbolchar + "]*\\b";
+    ClojureHighlightRules = (function(_super) {
+      __extends(ClojureHighlightRules, _super);
+
+      function ClojureHighlightRules() {}
+
+      ClojureHighlightRules.prototype.$rules = {
+        "start": [
+          {
+            token: "comment",
+            regex: ";.*$"
+          }, {
+            token: "comment",
+            regex: "^=begin$",
+            next: "comment"
+          }, {
+            token: "keyword",
+            regex: "\\(",
+            next: "function"
+          }, {
+            token: "keyword",
+            regex: "\\)"
+          }, {
+            token: "keyword",
+            regex: "[\\[\\]]"
+          }, {
+            token: "keyword",
+            regex: '(?:\\{|\\}|#\\{)'
+          }, {
+            token: "keyword",
+            regex: "&"
+          }, {
+            token: "keyword",
+            regex: '#\\^\\{'
+          }, {
+            token: "keyword",
+            regex: "%"
+          }, {
+            token: "keyword",
+            regex: "@"
+          }, {
+            token: "constant.numeric",
+            regex: "0[xX][0-9a-fA-F]+\\b"
+          }, {
+            token: "constant.numeric",
+            regex: "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+          }, {
+            token: "variable",
+            regex: "['][:]?" + symbolre
+          }, {
+            token: "keyword",
+            regex: "\\'"
+          }, {
+            token: "variable.parameter",
+            regex: "[:]" + symbolre
+          }, {
+            token: "support.function",
+            regex: "[.]" + symbolre
+          }, {
+            token: "identifier",
+            regex: symbolre
+          }, {
+            token: "identifier",
+            regex: "[" + nonalphanum + "]+"
+          }, {
+            token: "string",
+            regex: "\"",
+            next: "string"
+          }, {
+            token: "string.regexp",
+            regex: '/#"(?:\\.|(?:\\\")|[^\""\n])*"/g'
+          }
+        ],
+        "comment": [
+          {
+            token: "comment",
+            regex: "^=end$",
+            next: "start"
+          }, {
+            token: "comment",
+            regex: ".+",
+            merge: true
+          }
+        ],
+        "string": [
+          {
+            token: "constant.language.escape",
+            regex: "\\\\.|\\\\$",
+            merge: true
+          }, {
+            token: "string",
+            regex: '[^"\\\\]+',
+            merge: true
+          }, {
+            token: "string",
+            regex: '"',
+            merge: true,
+            next: "start"
+          }
+        ],
+        "function": [
+          {
+            token: "support.function",
+            regex: symbolre,
+            next: "start"
+          }, {
+            token: "support.function",
+            regex: "[" + nonalphanum + "]+",
+            next: "start"
+          }, {
+            token: "keyword",
+            regex: "",
+            merge: true,
+            next: "start"
+          }
+        ]
+      };
+
+      return ClojureHighlightRules;
+
+    })(highlight.TextHighlightRules);
+
+
+
+    TextMode = textmode.Mode;
+    Range = range.Range;
+    Tokenizer = tokenizer.Tokenizer;
+    openparens = ["(", "[", "{", '#{', "'("];
+    closeparens = [")", "]", "}"];
+    unalign = ["text"];
+    spaces = function(n) {
+      return new Array(n + 1).join(" ");
+    };
+    getIndent = function(line) {
+      var match;
+      match = line.match(/^(\s+)/);
+      if (match) {
+        return match[1].length;
+      } else {
+        return 0;
+      }
+    };
+    empty = function(line) {
+      return line.match(/^\s*$/);
+    };
+    isfunc = function(token) {
+      var _ref;
+      return token.type === "support.function" && ((_ref = token.value) === "fn" || _ref === "defn");
+    };
+    ExtendedCljMode = (function(_super) {
+      __extends(ExtendedCljMode, _super);
+
+      function ExtendedCljMode() {
+        this.autoIndentBuffer = __bind(this.autoIndentBuffer, this);
+        this.autoIndentCurrentRow = __bind(this.autoIndentCurrentRow, this);
+        this.autoIndentRow = __bind(this.autoIndentRow, this);
+        this.indentForRow = __bind(this.indentForRow, this);
+        this.autoOutdent = __bind(this.autoOutdent, this);
+        this.checkOutdent = __bind(this.checkOutdent, this);
+        this.getNextLineIndent = __bind(this.getNextLineIndent, this);
+        this._tokenise = __bind(this._tokenise, this);
+        this.toggleCommentLines = __bind(this.toggleCommentLines, this);
+        ExtendedCljMode.__super__.constructor.apply(this, arguments);
+        this.$tokenizer = new Tokenizer(new ClojureHighlightRules().getRules());
+        this.$behaviour = new cstyle.CstyleBehaviour();
+        this.$behaviour.remove("string_dquote");
+      }
+
+      ExtendedCljMode.prototype.toggleCommentLines = function(state, doc, startRow, endRow) {
+        var deleteRange, i, line, m, outdent, re, _i, _j, _results;
+        outdent = true;
+        re = /^(\s*)#/;
+        for (i = _i = startRow; startRow <= endRow ? _i < endRow : _i > endRow; i = startRow <= endRow ? ++_i : --_i) {
+          if (!re.test(doc.getLine(i))) {
+            outdent = false;
+            break;
+          }
+        }
+        if (outdent) {
+          deleteRange = new Range(0, 0, 0, 0);
+          _results = [];
+          for (i = _j = startRow; startRow <= endRow ? _j < endRow : _j > endRow; i = startRow <= endRow ? ++_j : --_j) {
+            line = doc.getLine(i);
+            m = line.match(re);
+            deleteRange.start.row = i;
+            deleteRange.end.row = i;
+            deleteRange.end.column = m[0].length;
+            _results.push(doc.replace(deleteRange, m[1]));
+          }
+          return _results;
+        } else {
+          return doc.indentRows(startRow, endRow, ";");
+        }
+      };
+
+      ExtendedCljMode.prototype._tokenise = function(line, state) {
+        var indent, indentingsince, infunc, last, lastcloseparen, newpos, parens, pindent, pos, sinceparen, token, tokens, _i, _len, _ref, _ref1, _ref2, _ref3, _ref4;
+        if (line.state != null) {
+          state = line.state;
+          tokens = line.tokens;
+        } else {
+          tokens = this.$tokenizer.getLineTokens(line, state).tokens;
+        }
+        pos = 0;
+        parens = 0;
+        indent = (_ref = (_ref1 = tokens[0]) != null ? _ref1.type : void 0) === "string" || _ref === "text" ? getIndent(tokens[0].value) : 0;
+        lastcloseparen = null;
+        pindent = [];
+        infunc = null;
+        sinceparen = null;
+        indentingsince = null;
+        for (_i = 0, _len = tokens.length; _i < _len; _i++) {
+          token = tokens[_i];
+          newpos = pos + token.value.length;
+          if (isfunc(token) && last.value === "(") {
+            infunc = pos;
+          }
+          if (_ref2 = token.type, __indexOf.call(unalign, _ref2) < 0) {
+            if (sinceparen !== null) {
+              if (sinceparen < indentingsince) {
+                indent = pos;
+              }
+              sinceparen++;
+            }
+          }
+          if (token.type === "keyword") {
+            if (_ref3 = token.value, __indexOf.call(openparens, _ref3) >= 0) {
+              sinceparen = 0;
+              indentingsince = token.value === "(" ? 2 : 1;
+              parens++;
+              pindent.push(indent);
+            } else if (_ref4 = token.value, __indexOf.call(closeparens, _ref4) >= 0) {
+              parens--;
+              if (parens >= 0) {
+                indent = pindent.pop();
+              }
+              lastcloseparen = newpos;
+            }
+          }
+          if (token.type !== "text") {
+            last = token;
+          }
+          pos = newpos;
+        }
+        if (parens > 0 && infunc !== null) {
+          indent = infunc + 1;
+        }
+        return [tokens, indent, parens, lastcloseparen];
+      };
+
+      ExtendedCljMode.prototype.getNextLineIndent = function(state, line, tab) {
+        var indent, parens, tokens, _ref;
+        _ref = this._tokenise(line, state), tokens = _ref[0], indent = _ref[1], parens = _ref[2];
+        return spaces(indent);
+      };
+
+      ExtendedCljMode.prototype.checkOutdent = function(state, line, input) {
+        var indent, parens, tokens, _ref;
+        if (input !== "\n") {
+          return false;
+        }
+        _ref = this._tokenise(line, state), tokens = _ref[0], indent = _ref[1], parens = _ref[2];
+        return parens < 0;
+      };
+
+      ExtendedCljMode.prototype.autoOutdent = function(state, doc, row) {
+        var lastcloseparen, line, oldindent, parens, pos, tokens, _ref;
+        line = doc.getLine(row);
+        _ref = this._tokenise(line, state), tokens = _ref[0], oldindent = _ref[1], parens = _ref[2], lastcloseparen = _ref[3];
+        if (lastcloseparen !== null) {
+          pos = doc.findMatchingBracket({
+            row: row,
+            column: lastcloseparen
+          });
+          if (pos) {
+            return doc.replace(new Range(row + 1, 0, row + 1, oldindent), spaces(pos.column));
+          }
+        }
+      };
+
+      ExtendedCljMode.prototype.tokeniseDocument = function(doc, upto) {
+        var line, row, rows, state, tokens, _i, _results;
+        if (!upto) {
+          upto = doc.doc.getLength() - 1;
+        }
+        rows = [];
+        state = "start";
+        _results = [];
+        for (row = _i = 0; 0 <= upto ? _i <= upto : _i >= upto; row = 0 <= upto ? ++_i : --_i) {
+          line = doc.getLine(row);
+          tokens = this.$tokenizer.getLineTokens(line, state);
+          state = tokens.state;
+          _results.push(rows[row] = tokens);
+        }
+        return _results;
+      };
+
+      ExtendedCljMode.prototype.indentForRow = function(doc, tokenised, row) {
+        var indent, lastcloseparen, line, parens, pos, prev, tokens, _ref;
+        prev = row - 1;
+        while (true) {
+          if (prev < 0) {
+            return 0;
+          }
+          line = doc.getLine(prev);
+          if (!empty(line)) {
+            break;
+          }
+          prev--;
+        }
+        _ref = this._tokenise(tokenised[prev]), tokens = _ref[0], indent = _ref[1], parens = _ref[2], lastcloseparen = _ref[3];
+        if (parens < 0 && lastcloseparen !== null) {
+          pos = doc.findMatchingBracket({
+            row: prev,
+            column: lastcloseparen
+          });
+          if (pos) {
+            indent = pos.column;
+          }
+        }
+        return indent;
+      };
+
+      ExtendedCljMode.prototype.autoIndentRow = function(doc, tokenised, row) {
+        var current, indent, line;
+        indent = this.indentForRow(doc, tokenised, row);
+        line = doc.getLine(row);
+        current = getIndent(line);
+        doc.replace(new Range(row, 0, row, current), spaces(indent));
+        return [current, indent];
+      };
+
+      ExtendedCljMode.prototype.autoIndentCurrentRow = function(doc) {
+        var current, i, indent, pos, row, tokenised, _i, _ref, _ref1;
+        range = doc.selection.getRange();
+        pos = doc.selection.getCursor();
+        tokenised = this.tokeniseDocument(doc, range.end.row);
+        for (row = _i = _ref = range.start.row, _ref1 = range.end.row; _ref <= _ref1 ? _i <= _ref1 : _i >= _ref1; row = _ref <= _ref1 ? ++_i : --_i) {
+          i = this.autoIndentRow(doc, tokenised, row);
+          if (row === pos.row) {
+            current = i[0], indent = i[1];
+          }
+        }
+        if (doc.selection.isEmpty() && pos.column < current) {
+          return doc.selection.moveCursorTo(pos.row, indent);
+        }
+      };
+
+      ExtendedCljMode.prototype.autoIndentBuffer = function(doc) {
+        var row, tokenised, _i, _ref, _results;
+        tokenised = this.tokeniseDocument(doc);
+        _results = [];
+        for (row = _i = 0, _ref = doc.doc.getLength(); 0 <= _ref ? _i < _ref : _i > _ref; row = 0 <= _ref ? ++_i : --_i) {
+          _results.push(this.autoIndentRow(doc, tokenised, row));
+        }
+        return _results;
+      };
+
+      return ExtendedCljMode;
+
+    })(TextMode);
+
+    exports.Mode = ExtendedCljMode;
+  });
+
+}).call(this);
+
+ace.define('ace/mode/behaviour/cstyle', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/behaviour', 'ace/token_iterator', 'ace/lib/lang'], function(require, exports, module) {
+
+
+var oop = require("../../lib/oop");
+var Behaviour = require("../behaviour").Behaviour;
+var TokenIterator = require("../../token_iterator").TokenIterator;
+var lang = require("../../lib/lang");
+
+var SAFE_INSERT_IN_TOKENS =
+    ["text", "paren.rparen", "punctuation.operator"];
+var SAFE_INSERT_BEFORE_TOKENS =
+    ["text", "paren.rparen", "punctuation.operator", "comment"];
+
+
+var autoInsertedBrackets = 0;
+var autoInsertedRow = -1;
+var autoInsertedLineEnd = "";
+var maybeInsertedBrackets = 0;
+var maybeInsertedRow = -1;
+var maybeInsertedLineStart = "";
+var maybeInsertedLineEnd = "";
+
+var CstyleBehaviour = function () {
+
+    CstyleBehaviour.isSaneInsertion = function(editor, session) {
+        var cursor = editor.getCursorPosition();
+        var iterator = new TokenIterator(session, cursor.row, cursor.column);
+        if (!this.$matchTokenType(iterator.getCurrentToken() || "text", SAFE_INSERT_IN_TOKENS)) {
+            var iterator2 = new TokenIterator(session, cursor.row, cursor.column + 1);
+            if (!this.$matchTokenType(iterator2.getCurrentToken() || "text", SAFE_INSERT_IN_TOKENS))
+                return false;
+        }
+        iterator.stepForward();
+        return iterator.getCurrentTokenRow() !== cursor.row ||
+            this.$matchTokenType(iterator.getCurrentToken() || "text", SAFE_INSERT_BEFORE_TOKENS);
+    };
+
+    CstyleBehaviour.$matchTokenType = function(token, types) {
+        return types.indexOf(token.type || token) > -1;
+    };
+
+    CstyleBehaviour.recordAutoInsert = function(editor, session, bracket) {
+        var cursor = editor.getCursorPosition();
+        var line = session.doc.getLine(cursor.row);
+        if (!this.isAutoInsertedClosing(cursor, line, autoInsertedLineEnd[0]))
+            autoInsertedBrackets = 0;
+        autoInsertedRow = cursor.row;
+        autoInsertedLineEnd = bracket + line.substr(cursor.column);
+        autoInsertedBrackets++;
+    };
+
+    CstyleBehaviour.recordMaybeInsert = function(editor, session, bracket) {
+        var cursor = editor.getCursorPosition();
+        var line = session.doc.getLine(cursor.row);
+        if (!this.isMaybeInsertedClosing(cursor, line))
+            maybeInsertedBrackets = 0;
+        maybeInsertedRow = cursor.row;
+        maybeInsertedLineStart = line.substr(0, cursor.column) + bracket;
+        maybeInsertedLineEnd = line.substr(cursor.column);
+        maybeInsertedBrackets++;
+    };
+
+    CstyleBehaviour.isAutoInsertedClosing = function(cursor, line, bracket) {
+        return autoInsertedBrackets > 0 &&
+            cursor.row === autoInsertedRow &&
+            bracket === autoInsertedLineEnd[0] &&
+            line.substr(cursor.column) === autoInsertedLineEnd;
+    };
+
+    CstyleBehaviour.isMaybeInsertedClosing = function(cursor, line) {
+        return maybeInsertedBrackets > 0 &&
+            cursor.row === maybeInsertedRow &&
+            line.substr(cursor.column) === maybeInsertedLineEnd &&
+            line.substr(0, cursor.column) == maybeInsertedLineStart;
+    };
+
+    CstyleBehaviour.popAutoInsertedClosing = function() {
+        autoInsertedLineEnd = autoInsertedLineEnd.substr(1);
+        autoInsertedBrackets--;
+    };
+
+    CstyleBehaviour.clearMaybeInsertedClosing = function() {
+        maybeInsertedBrackets = 0;
+        maybeInsertedRow = -1;
+    };
+
+    this.add("braces", "insertion", function (state, action, editor, session, text) {
+        var cursor = editor.getCursorPosition();
+        var line = session.doc.getLine(cursor.row);
+        if (text == '{') {
+            var selection = editor.getSelectionRange();
+            var selected = session.doc.getTextRange(selection);
+            if (selected !== "" && selected !== "{" && editor.getWrapBehavioursEnabled()) {
+                return {
+                    text: '{' + selected + '}',
+                    selection: false
+                };
+            } else if (CstyleBehaviour.isSaneInsertion(editor, session)) {
+                if (/[\]\}\)]/.test(line[cursor.column])) {
+                    CstyleBehaviour.recordAutoInsert(editor, session, "}");
+                    return {
+                        text: '{}',
+                        selection: [1, 1]
+                    };
+                } else {
+                    CstyleBehaviour.recordMaybeInsert(editor, session, "{");
+                    return {
+                        text: '{',
+                        selection: [1, 1]
+                    };
+                }
+            }
+        } else if (text == '}') {
+            var rightChar = line.substring(cursor.column, cursor.column + 1);
+            if (rightChar == '}') {
+                var matching = session.$findOpeningBracket('}', {column: cursor.column + 1, row: cursor.row});
+                if (matching !== null && CstyleBehaviour.isAutoInsertedClosing(cursor, line, text)) {
+                    CstyleBehaviour.popAutoInsertedClosing();
+                    return {
+                        text: '',
+                        selection: [1, 1]
+                    };
+                }
+            }
+        } else if (text == "\n" || text == "\r\n") {
+            var closing = "";
+            if (CstyleBehaviour.isMaybeInsertedClosing(cursor, line)) {
+                closing = lang.stringRepeat("}", maybeInsertedBrackets);
+                CstyleBehaviour.clearMaybeInsertedClosing();
+            }
+            var rightChar = line.substring(cursor.column, cursor.column + 1);
+            if (rightChar == '}' || closing !== "") {
+                var openBracePos = session.findMatchingBracket({row: cursor.row, column: cursor.column}, '}');
+                if (!openBracePos)
+                     return null;
+
+                var indent = this.getNextLineIndent(state, line.substring(0, cursor.column), session.getTabString());
+                var next_indent = this.$getIndent(line);
+
+                return {
+                    text: '\n' + indent + '\n' + next_indent + closing,
+                    selection: [1, indent.length, 1, indent.length]
+                };
+            }
+        }
+    });
+
+    this.add("braces", "deletion", function (state, action, editor, session, range) {
+        var selected = session.doc.getTextRange(range);
+        if (!range.isMultiLine() && selected == '{') {
+            var line = session.doc.getLine(range.start.row);
+            var rightChar = line.substring(range.end.column, range.end.column + 1);
+            if (rightChar == '}') {
+                range.end.column++;
+                return range;
+            } else {
+                maybeInsertedBrackets--;
+            }
+        }
+    });
+
+    this.add("parens", "insertion", function (state, action, editor, session, text) {
+        if (text == '(') {
+            var selection = editor.getSelectionRange();
+            var selected = session.doc.getTextRange(selection);
+            if (selected !== "" && editor.getWrapBehavioursEnabled()) {
+                return {
+                    text: '(' + selected + ')',
+                    selection: false
+                };
+            } else if (CstyleBehaviour.isSaneInsertion(editor, session)) {
+                CstyleBehaviour.recordAutoInsert(editor, session, ")");
+                return {
+                    text: '()',
+                    selection: [1, 1]
+                };
+            }
+        } else if (text == ')') {
+            var cursor = editor.getCursorPosition();
+            var line = session.doc.getLine(cursor.row);
+            var rightChar = line.substring(cursor.column, cursor.column + 1);
+            if (rightChar == ')') {
+                var matching = session.$findOpeningBracket(')', {column: cursor.column + 1, row: cursor.row});
+                if (matching !== null && CstyleBehaviour.isAutoInsertedClosing(cursor, line, text)) {
+                    CstyleBehaviour.popAutoInsertedClosing();
+                    return {
+                        text: '',
+                        selection: [1, 1]
+                    };
+                }
+            }
+        }
+    });
+
+    this.add("parens", "deletion", function (state, action, editor, session, range) {
+        var selected = session.doc.getTextRange(range);
+        if (!range.isMultiLine() && selected == '(') {
+            var line = session.doc.getLine(range.start.row);
+            var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
+            if (rightChar == ')') {
+                range.end.column++;
+                return range;
+            }
+        }
+    });
+
+    this.add("brackets", "insertion", function (state, action, editor, session, text) {
+        if (text == '[') {
+            var selection = editor.getSelectionRange();
+            var selected = session.doc.getTextRange(selection);
+            if (selected !== "" && editor.getWrapBehavioursEnabled()) {
+                return {
+                    text: '[' + selected + ']',
+                    selection: false
+                };
+            } else if (CstyleBehaviour.isSaneInsertion(editor, session)) {
+                CstyleBehaviour.recordAutoInsert(editor, session, "]");
+                return {
+                    text: '[]',
+                    selection: [1, 1]
+                };
+            }
+        } else if (text == ']') {
+            var cursor = editor.getCursorPosition();
+            var line = session.doc.getLine(cursor.row);
+            var rightChar = line.substring(cursor.column, cursor.column + 1);
+            if (rightChar == ']') {
+                var matching = session.$findOpeningBracket(']', {column: cursor.column + 1, row: cursor.row});
+                if (matching !== null && CstyleBehaviour.isAutoInsertedClosing(cursor, line, text)) {
+                    CstyleBehaviour.popAutoInsertedClosing();
+                    return {
+                        text: '',
+                        selection: [1, 1]
+                    };
+                }
+            }
+        }
+    });
+
+    this.add("brackets", "deletion", function (state, action, editor, session, range) {
+        var selected = session.doc.getTextRange(range);
+        if (!range.isMultiLine() && selected == '[') {
+            var line = session.doc.getLine(range.start.row);
+            var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
+            if (rightChar == ']') {
+                range.end.column++;
+                return range;
+            }
+        }
+    });
+
+    this.add("string_dquotes", "insertion", function (state, action, editor, session, text) {
+        if (text == '"' || text == "'") {
+            var quote = text;
+            var selection = editor.getSelectionRange();
+            var selected = session.doc.getTextRange(selection);
+            if (selected !== "" && selected !== "'" && selected != '"' && editor.getWrapBehavioursEnabled()) {
+                return {
+                    text: quote + selected + quote,
+                    selection: false
+                };
+            } else {
+                var cursor = editor.getCursorPosition();
+                var line = session.doc.getLine(cursor.row);
+                var leftChar = line.substring(cursor.column-1, cursor.column);
+                if (leftChar == '\\') {
+                    return null;
+                }
+                var tokens = session.getTokens(selection.start.row);
+                var col = 0, token;
+                var quotepos = -1; // Track whether we're inside an open quote.
+
+                for (var x = 0; x < tokens.length; x++) {
+                    token = tokens[x];
+                    if (token.type == "string") {
+                      quotepos = -1;
+                    } else if (quotepos < 0) {
+                      quotepos = token.value.indexOf(quote);
+                    }
+                    if ((token.value.length + col) > selection.start.column) {
+                        break;
+                    }
+                    col += tokens[x].value.length;
+                }
+                if (!token || (quotepos < 0 && token.type !== "comment" && (token.type !== "string" || ((selection.start.column !== token.value.length+col-1) && token.value.lastIndexOf(quote) === token.value.length-1)))) {
+                    if (!CstyleBehaviour.isSaneInsertion(editor, session))
+                        return;
+                    return {
+                        text: quote + quote,
+                        selection: [1,1]
+                    };
+                } else if (token && token.type === "string") {
+                    var rightChar = line.substring(cursor.column, cursor.column + 1);
+                    if (rightChar == quote) {
+                        return {
+                            text: '',
+                            selection: [1, 1]
+                        };
+                    }
+                }
+            }
+        }
+    });
+
+    this.add("string_dquotes", "deletion", function (state, action, editor, session, range) {
+        var selected = session.doc.getTextRange(range);
+        if (!range.isMultiLine() && (selected == '"' || selected == "'")) {
+            var line = session.doc.getLine(range.start.row);
+            var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
+            if (rightChar == selected) {
+                range.end.column++;
+                return range;
+            }
+        }
+    });
+
+};
+
+oop.inherits(CstyleBehaviour, Behaviour);
+
+exports.CstyleBehaviour = CstyleBehaviour;
+});
