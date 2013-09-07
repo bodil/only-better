@@ -35,8 +35,9 @@
 
       <!-- Any section element inside of this container is displayed as a slide -->
       <div class="slides">
-        <section class="photo" style="background-image: url(m/erlang.gif)">
+        <section class="photo" style="background-image: url(m/hi5.gif)">
           <h2 style="margin-top: 1.2em; margin-bottom: 1.2em">Programming,<br/>Only&nbsp;Better</h2>
+          <p class="me"><a href="https://twitter.com/bodil">@bodil</a></p>
         </section>
 
         <section>
@@ -97,6 +98,20 @@
             Fac.fac(5);
 
             Fac.fac(10);
+          </pre>
+        </section>
+
+        <section>
+          <pre class="context">
+            (use 'clojure.core.logic)
+
+            (require '[clojure.core.logic.fd :refer
+                       [in interval + != distinct eq]])
+          </pre>
+          <pre class="repl" data-lang="clojure">
+            (run* [a b]
+              (in a b (interval 1 10))
+              (+ a b 10))
           </pre>
         </section>
 
