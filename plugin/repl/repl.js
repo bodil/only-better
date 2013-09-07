@@ -46,12 +46,15 @@
     return exprs.concat([""]).join(commentify(comments[language], "...", "evaluating") + "\n\n");
   };
 
+  var cancelEvaluation = function(editor) {
+    editor.container.classList.remove("evaluating");
+  };
+
   var evalBuffer = function(editor) {
     var code = splitBuffer(decommentify(editor.codeLanguage, editor.getValue())),
         pos = editor.selection.getCursor();
     editor.setValue(loading(editor.codeLanguage, code), 1);
     editor.selection.moveCursorToPosition(pos);
-    editor.setReadOnly(true);
     editor.container.classList.add("evaluating");
     socket.emit("eval", {
       language: editor.codeLanguage,
@@ -70,7 +73,6 @@
       });
 
       editor.container.classList.remove("evaluating");
-      editor.setReadOnly(false);
       editor.setValue(out, 1);
       editor.selection.moveCursorToPosition(pos);
 
@@ -90,6 +92,12 @@
     editor.session.setUseWrapMode(true);
     editor.session.setUseWorker(false);
     editor.setDisplayIndentGuides(false);
+
+    editor.commands.addCommand({
+      name: "cancelEvaluation",
+      bindKey: "Ctrl-G",
+      exec: function() { cancelEvaluation(editor); }
+    });
 
     editor.commands.addCommand({
       name: "evalBuffer",
