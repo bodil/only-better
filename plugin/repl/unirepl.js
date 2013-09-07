@@ -63,7 +63,6 @@ var wrapProcess = function(proc, repl) {
         buf = buf.slice(repl.chopPrompt.length);
       }
       out = buf.slice(0, buf.length - repl.prompt.length);
-      console.log("REPL OUT:", out);
       result.emit("result", {
         value: (out.trim() === repl.nil) ? null : out
       });
@@ -73,7 +72,6 @@ var wrapProcess = function(proc, repl) {
 
   var errReport = function() {
     errTimer = null;
-    console.log("REPL ERROR:", err);
     result.emit("result", {
       error: err
     });
@@ -92,7 +90,6 @@ var wrapProcess = function(proc, repl) {
   };
 
   result.sendRaw = function(data, cb) {
-    console.log("REPL IN:", data);
     proc.stdin.write(data);
     result.once("result", function(s) {
       cb(null, s);
@@ -146,7 +143,6 @@ var mapExprs = function(repl, exprs, cb) {
 };
 
 module.exports.run = function(e, cb) {
-  console.log(e);
   createRepl(e, function(err, repl) {
     if (err) return cb(err);
     mapExprs(repl, e.context, function(err, contextResults) {
