@@ -49,10 +49,22 @@ body {
         padding: 1em 2em !important;
         margin: 0 -2em;
 
-        &.photo {
-            background-size: cover;
+        &.blank {
+            visibility: hidden;
+        }
 
-            h1, h2, h3, h4, h5, h6 {
+        &.photo {
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: 50%;
+            background-color: inherit;
+            &.cover {
+                background-size: cover;
+            }
+
+            min-height: 10em;
+
+            h1, h2, h3, h4, h5, h6, p, ul {
                 background-color: rgba(0,0,0,0.3);
                 color: @headerContrast;
                 text-shadow: 0px 0px 12px black;
@@ -141,7 +153,9 @@ body {
     }
 
     blockquote {
-        background: darken(@background, 5%);
+        background: lighten(@background, 5%);
+        padding: 1em 2em;
+        font-family: Dijkstra;
     }
 
     // Links
@@ -213,6 +227,10 @@ body {
         -ms-transition: all .2s linear;
         -o-transition: all .2s linear;
         transition: all .2s linear;
+
+        &.max {
+            margin: -0.7em 0 -0.9em 0;
+        }
     }
 
     a:hover img {

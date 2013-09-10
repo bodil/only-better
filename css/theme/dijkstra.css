@@ -19,7 +19,17 @@ body {
   padding: 1em 2em !important;
   margin: 0 -2em;
 }
+.reveal section.blank {
+  visibility: hidden;
+}
 .reveal section.photo {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-color: inherit;
+  min-height: 10em;
+}
+.reveal section.photo.cover {
   background-size: cover;
 }
 .reveal section.photo h1,
@@ -27,7 +37,9 @@ body {
 .reveal section.photo h3,
 .reveal section.photo h4,
 .reveal section.photo h5,
-.reveal section.photo h6 {
+.reveal section.photo h6,
+.reveal section.photo p,
+.reveal section.photo ul {
   background-color: rgba(0, 0, 0, 0.3);
   color: #dddddd;
   text-shadow: 0px 0px 12px black;
@@ -65,7 +77,9 @@ body {
   letter-spacing: 0.05em;
 }
 .reveal blockquote {
-  background: #f2f2f2;
+  background: #ffffff;
+  padding: 1em 2em;
+  font-family: Dijkstra;
 }
 .reveal a:not(.image) {
   color: #333333;
@@ -120,6 +134,9 @@ body {
   -ms-transition: all .2s linear;
   -o-transition: all .2s linear;
   transition: all .2s linear;
+}
+.reveal section img.max {
+  margin: -0.7em 0 -0.9em 0;
 }
 .reveal a:hover img {
   -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.55);
