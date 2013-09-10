@@ -312,8 +312,81 @@ start with.&rdquo;
           </ul>
         </section>
 
-        <section class="photo" style="background-image: url(m/putin.jpg)">
-          <h3 style="margin-top: 5.5em; margin-bottom: -2em">State is the Enemy</h3>
+        <section class="photo" style="background-image: url(m/larry.jpg)">
+          <h3 style="margin-top: 5.5em; margin-bottom: -2em">State is the Great Enemy</h3>
+        </section>
+
+        <section class="photo" style="background-image: url(m/glados.jpg)">
+          <h3 style="margin-top: 5.5em; margin-bottom: -2em">Control</h3>
+        </section>
+
+        <section>
+          <p>Control is about the order in which things&nbsp;happen.</p>
+        </section>
+
+        <section>
+          <pre class="repl" data-lang="javascript">
+            var a = 2;
+
+            var b = a + 3;
+
+            var c = b * 2;
+
+            c;
+          </pre>
+        </section>
+
+        <section>
+          <h3>omg concurrency</h3>
+          <ul>
+            <li class="fragment">What does the control flow of a concurrent system look like?</li>
+            <li class="fragment">How do you test something when you can't even be sure of the order in which it happens?</li>
+            <li class="fragment">How do you test something when something else might be changing its state at the same time?</li>
+          </ul>
+        </section>
+
+        <section class="photo" style="background-image: url(m/brooks.jpg)">
+          <h3 style="margin-top: 0">Code Volume</h3>
+          <p style="margin-top: 5em; margin-bottom: -2em">
+            &ldquo;Many of the classic problems of developing software products
+derive from this essential complexity and its nonlinear increase
+with size.&rdquo;
+          </p>
+        </section>
+
+        <section class="photo" style="background-image: url(m/dijkstra/3.jpg)">
+          <h3>Code Volume</h3>
+          <p style="margin-top: 1em; margin-bottom: -2em">
+            &ldquo;It has been suggested that there is some kind of
+            law of nature telling us that the amount of intellectual
+            effort needed grows with the square of program length.
+            But, thank goodness, no one has been able to prove this
+            law.&rdquo;
+          </p>
+        </section>
+
+        <section>
+          <h4>Moar Complexity</h4>
+          <ul>
+            <li class="fragment">Complexity breeds complexity.</li>
+            <li class="fragment">Simplicity is hard.</li>
+            <li class="fragment">Power corrupts.</li>
+          </ul>
+        </section>
+
+        <section>
+          <pre class="context">
+            (use 'clojure.core.logic)
+
+            (require '[clojure.core.logic.fd :refer
+                       [in interval + * != distinct eq]])
+          </pre>
+          <pre class="repl" data-lang="clojure">
+            (run* [a b c]
+              (== a 2)
+              (+ a 3 b)
+              (* b 2 c))
+          </pre>
         </section>
 
         <section>
@@ -324,18 +397,6 @@ start with.&rdquo;
             fac 5
 
             fac 10
-          </pre>
-        </section>
-
-        <section>
-          <pre class="repl" data-lang="javascript">
-            function fac(n) {
-              return (n == 0) ? 1 : n * fac(n - 1);
-            }
-
-            fac(5);
-
-            fac(10);
           </pre>
         </section>
 
