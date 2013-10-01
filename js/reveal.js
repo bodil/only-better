@@ -413,7 +413,8 @@ var Reveal = (function(){
 				backgroundColor: slide.getAttribute( 'data-background-color' ),
 				backgroundRepeat: slide.getAttribute( 'data-background-repeat' ),
 				backgroundPosition: slide.getAttribute( 'data-background-position' ),
-				backgroundTransition: slide.getAttribute( 'data-background-transition' )
+				backgroundTransition: slide.getAttribute( 'data-background-transition' ),
+                backgroundFilter: slide.getAttribute("data-background-filter")
 			};
 
 			var element = document.createElement( 'div' );
@@ -436,6 +437,7 @@ var Reveal = (function(){
 			if( data.backgroundRepeat ) element.style.backgroundRepeat = data.backgroundRepeat;
 			if( data.backgroundPosition ) element.style.backgroundPosition = data.backgroundPosition;
 			if( data.backgroundTransition ) element.setAttribute( 'data-background-transition', data.backgroundTransition );
+            if (data.backgroundFilter) element.style.webkitFilter = data.backgroundFilter;
 
 			container.appendChild( element );
 

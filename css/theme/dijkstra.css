@@ -14,7 +14,7 @@ body {
   background: #ffffff;
 }
 .reveal section {
-  background: #eeeeee;
+  background: rgba(242, 242, 242, 0.9);
   border-radius: 0.2em;
   padding: 1em 2em !important;
   margin: 0 -2em;
@@ -41,7 +41,7 @@ body {
 .reveal section.photo p,
 .reveal section.photo ul {
   background-color: rgba(0, 0, 0, 0.3);
-  color: #dddddd;
+  color: #ffffff;
   text-shadow: 0px 0px 12px black;
 }
 .reveal section.photo p {
@@ -77,9 +77,9 @@ body {
   letter-spacing: 0.05em;
 }
 .reveal blockquote {
-  background: #ffffff;
-  padding: 1em 2em;
   font-family: Dijkstra;
+  font-style: normal;
+  box-shadow: none;
 }
 .reveal a:not(.image) {
   color: #333333;
@@ -245,4 +245,14 @@ body {
   margin: 0 auto;
   width: 80%;
   bottom: 1em;
+}
+div.slideBackground.fade {
+  opacity: 0.5;
+}
+section.celestia {
+  background: none;
+}
+section.celestia h3 {
+  color: #ffffff;
+  text-shadow: 0 0 8px black;
 }

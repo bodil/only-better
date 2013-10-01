@@ -4,11 +4,11 @@
 @import url('fonts/Roboto_Slab/robotoslab.css');
 
 @background: #ffffff;
-@slideBackground: #eeeeee;
+@slideBackground: rgba(242, 242, 242, 0.9);
 @text: #333333;
 @textContrast: #eeeeee;
 @headerText: #555555;
-@headerContrast: #dddddd;
+@headerContrast: #ffffff;
 @linkText: @text;
 @linkContrast: @textContrast;
 @bullet: desaturate(lighten(@text, 40%), 15%);
@@ -153,9 +153,9 @@ body {
     }
 
     blockquote {
-        background: lighten(@background, 5%);
-        padding: 1em 2em;
         font-family: Dijkstra;
+        font-style: normal;
+        box-shadow: none;
     }
 
     // Links
@@ -306,4 +306,16 @@ body {
         bottom: 1em;
     }
 
+}
+
+div.slideBackground.fade {
+    opacity: 0.5;
+}
+
+section.celestia {
+    background: none;
+    h3 {
+        color: @headerContrast;
+        text-shadow: 0 0 8px black;
+    }
 }
