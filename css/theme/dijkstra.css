@@ -14,7 +14,7 @@ body {
   background: #ffffff;
 }
 .reveal section {
-  background: rgba(242, 242, 242, 0.9);
+  background: rgba(242, 242, 242, 0.85);
   border-radius: 0.2em;
   padding: 1em 2em !important;
   margin: 0 -2em;
