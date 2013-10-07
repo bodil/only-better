@@ -39,7 +39,7 @@ var repls = {
 
   java: {
     command: "java",
-    args: ["-jar", "jars/javarepl.jar", "-d"],
+    args: ["-jar", "jars/javarepl.jar", "--colors=false"],
     prompt: "java> ",
     chopPrompt: "    | "
   }
