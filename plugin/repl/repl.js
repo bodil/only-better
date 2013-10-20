@@ -7,6 +7,7 @@
     java: "//",
     javascript: "//",
     ocaml: ["(*", "*)"],
+    sml: ["(*", "*)"],
     haskell: "--",
     clojure: ";;"
   };

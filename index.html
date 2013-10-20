@@ -456,10 +456,13 @@ with size.&rdquo;
         </section>
 
         <section data-background="m/splash.png">
-          <pre class="repl" data-lang="haskell">
-            let fac 0 = 1
-                fac n = n * fac (n-1)
+          <pre class="repl" data-lang="sml">
+            fun fac 0 = 1
+            |   fac n = n * fac (n - 1);
 
+            fac 5;
+
+            fac 10;
           </pre>
         </section>
 

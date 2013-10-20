@@ -42,6 +42,12 @@ var repls = {
     args: ["-jar", "jars/javarepl.jar", "--colors=false"],
     prompt: "java> ",
     chopPrompt: "    | "
+  },
+
+  sml: {
+    command: "/usr/lib/smlnj/bin/sml",
+    prompt: "- ",
+    chopPrompt: "= "
   }
 };
 
