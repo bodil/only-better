@@ -15,7 +15,8 @@
     ocaml: ["(*", "*)"],
     sml: ["(*", "*)"],
     haskell: "--",
-    clojure: ";;"
+    clojure: ";;",
+    bodol: ";;"
   };
 
   var socket = io.connect(window.location.origin + "/repl");
@@ -92,7 +93,7 @@
     editor.codeLanguage = lang;
     editor.setTheme("ace/theme/xcode");
     editor.renderer.setShowGutter(false);
-    editor.session.setMode("ace/mode/" + lang);
+    editor.session.setMode("ace/mode/" + (lang === "bodol" ? "clojure" : lang));
     editor.session.setNewLineMode("unix");
     editor.session.setTabSize(2);
     editor.session.setUseSoftTabs(true);

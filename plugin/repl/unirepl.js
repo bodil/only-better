@@ -1,4 +1,4 @@
-/*global module, setTimeout */
+/*global process, module, setTimeout */
 
 /* Copyright 2013 Bodil Stokke <bodil@bodil.org>
  *
@@ -54,11 +54,25 @@ var repls = {
     command: "/usr/lib/smlnj/bin/sml",
     prompt: "- ",
     chopPrompt: "= "
+  },
+
+  bodol: {
+    command: "java",
+    args: ["-jar", "jars/bodol.jar"],
+    prompt: ">> ",
+    replace: [["\n", " "]],
+    appendAlways: "\n"
   }
 };
 
 var occur = function(c, s) {
   return s.split(c).length - 1;
+};
+
+var replaceInput = function(s, res) {
+  return res.reduce(function(acc, re) {
+    return acc.split(re[0]).join(re[1]);
+  }, s);
 };
 
 var wrapProcess = function(proc, repl) {
@@ -109,9 +123,12 @@ var wrapProcess = function(proc, repl) {
   };
 
   result.send = function(data, cb) {
+    if (repl.replace) data = replaceInput(data, repl.replace);
     if (repl.appendIfMulti &&
         occur("\n", data) > 1) {
       data = data + repl.appendIfMulti;
+    } else if (repl.appendAlways) {
+      data = data + repl.appendAlways;
     }
     result.sendRaw(data, cb);
   };
@@ -125,7 +142,8 @@ var createRepl = function(e, cb) {
   var repl = repls[e.language],
       proc = child.spawn(repl.command, repl.args, {
         env: {
-          TERM: "dumb"
+          TERM: "dumb",
+          LANG: process.env.LANG
         }
       }),
       p;
