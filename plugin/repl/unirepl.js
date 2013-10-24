@@ -82,6 +82,7 @@ var wrapProcess = function(proc, repl) {
   proc.stdout.on("data", function(chunk) {
     var out;
     if (err.length > 0) return;
+    console.log("OUT:", chunk);
     buf += chunk;
     if (buf.slice(buf.length - repl.prompt.length) === repl.prompt) {
       while (repl.chopPrompt &&
@@ -101,6 +102,7 @@ var wrapProcess = function(proc, repl) {
     result.emit("result", {
       error: err
     });
+    console.log("ERR:", err);
     err = "";
   };
 
@@ -120,6 +122,7 @@ var wrapProcess = function(proc, repl) {
     result.once("result", function(s) {
       cb(null, s);
     });
+    console.log("IN:", data);
   };
 
   result.send = function(data, cb) {

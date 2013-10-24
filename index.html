@@ -292,7 +292,7 @@ start with.&rdquo;
         <section data-background="m/too-many-pinkies.jpg">
           <h4>Example Based Testing</h4>
           <p>Testing a component with one input also tells&nbsp;you nothing about the same component with another input.</p>
-          <p class="fragment">Go home and google &ldquo;generative testing.&rdquo;</p>
+          <p class="fragment">Generative testing is a thing.</p>
         </section>
 
         <!-- <section class="photo" style="background-image: url(m/dijkstra/10.png)"></section> -->
@@ -350,7 +350,7 @@ with size.&rdquo;
 
         <section class="photo" style="background-image: url(m/dijkstra/3.jpg)" data-background="m/splash.png">
           <h3>Code Volume</h3>
-          <p style="margin-top: 1em; margin-bottom: -2em">
+          <p style="margin-top: 2em; margin-bottom: -2em">
             &ldquo;It has been suggested that there is some kind of
             law of nature telling us that the amount of intellectual
             effort needed grows with the square of program length.
@@ -397,6 +397,66 @@ with size.&rdquo;
             <li class="fragment">Referential transparency means <em>no state</em>, only <em>inputs</em> and <em>outputs</em>.</li>
             <li class="fragment">No side effects.</li>
           </ul>
+        </section>
+
+        <section data-background="m/splash.png">
+          <pre class="repl" data-lang="java">
+            class Number {
+              private long value;
+              public Number(long value) {
+                this.value = value;
+              }
+              public long get() {
+                return this.value;
+              }
+              public void inc() {
+                this.value = this.value + 1;
+              }
+            }
+
+            Number n = new Number(0);
+
+            n.inc();
+
+            n.get();
+          </pre>
+        </section>
+
+        <section data-background="m/splash.png">
+          <pre class="repl" data-lang="clojure">
+            (def number {:value 0})
+
+            (defn succ [number]
+              (assoc number :value (+ (:value number) 1)))
+
+            (succ number)
+          </pre>
+        </section>
+
+        <section data-background="m/splash.png">
+          <pre class="repl" data-lang="sml">
+            datatype number = number of int;
+
+            val n = number 0;
+
+            fun inc (number n) = number (n+1);
+
+            inc n;
+          </pre>
+        </section>
+
+        <section data-background="m/splash.png">
+          <pre class="repl" data-lang="java">
+            class Number {
+              public static long inc(long n) {
+                return n + 1;
+              }
+            }
+
+            long n = 0;
+
+            Number.inc(n);
+          </pre>
         </section>
 
         <section data-background="m/rarity-machine.png">
@@ -463,13 +523,21 @@ with size.&rdquo;
         </section>
 
         <section data-background="m/splash.png">
-          <pre class="repl" data-lang="sml">
-            fun fac 0 = 1
-            |   fac n = n * fac (n - 1);
+          <pre class="repl" data-lang="haskell">
+            let fac 0 = 1
+                fac n = n * fac (n-1)
 
-            fac 5;
+            fac 5
 
-            fac 10;
+            fac 10
+          </pre>
+        </section>
+
+        <section data-background="m/splash.png">
+          <pre class="repl" data-lang="haskell">
+            let inclist :: [Int] -> [Int]
+                inclist [] = []
+                inclist (head:tail) = (head+1) : inclist tail
           </pre>
         </section>
 
@@ -477,11 +545,12 @@ with size.&rdquo;
           <h3>tl;dr:</h3>
           <ul>
             <li class="fragment">Object-oriented programming has a state abuse problem we need to stop ignoring.</li>
-            <li class="fragment">Functional programming is not a silver bullet, but it eliminates mutable state.</li>
+            <li class="fragment">Functional programming is not a silver bullet, but it mostly eliminates mutable state.</li>
             <li class="fragment">Complexity through control still exists in FP.</li>
           </ul>
         </section>
 
+        <!-- TODO: Most interesting cat → interrogation cat -->
         <section class="photo" style="background-image: url(m/the-most-interesting-cat-in-the-world.png)" data-background="m/cats.jpg" data-background-filter="opacity(25%)">
           <h4 style="margin-top: 8em; margin-bottom: -2em">We need to talk.</h4>
         </section>
@@ -493,6 +562,27 @@ with size.&rdquo;
             var b = a + 3;
 
             var c = b * 2;
+
+            c;
+          </pre>
+        </section>
+
+        <section data-background="m/splash.png">
+          <pre class="repl" data-lang="clojure">
+            (let [a 2
+                  b (+ a 3)
+                  c (* b 2)]
+              c)
+          </pre>
+        </section>
+
+        <section data-background="m/splash.png">
+          <pre class="repl" data-lang="sml">
+            val a = 2;
+
+            val b = a + 3;
+
+            val c = b * 2;
 
             c;
           </pre>
@@ -566,12 +656,12 @@ with size.&rdquo;
     center: true,
     mouseWheel: true,
     rollingLinks: false,
-  // Emergency crap projector settings:
-  // width: 700,
-  // height: 700,
-  // margin: 0.05,
-  // minScale: 0.2,
-  // maxScale: 1.5,
+    // Emergency crap projector settings:
+    width: 700,
+    height: 700,
+    margin: 0.05,
+    minScale: 0.2,
+    maxScale: 1.5,
     transition: 'zoom', // default/cube/page/concave/zoom/linear/fade/none
 
     // Optional libraries used to extend on reveal.js

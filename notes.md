@@ -24,6 +24,13 @@ Number.mutableStateIsBad(n);
 n.fac();
 ```
 
+## Control structures
+
+```haskell
+let inclist :: [Int] -> [Int]
+    inclist = map succ
+```
+
 ## Declarative Programming Now
 
 ```clojure
