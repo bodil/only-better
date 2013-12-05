@@ -6,8 +6,8 @@
 
 pre.repl, div.live-repl {
     font-family: 'Inconsolata', monospace !important;
-    font-size: 26pt;
-    line-height: 32pt;
+    font-size: 24pt;
+    line-height: 28pt;
 }
 
 pre.context {
@@ -16,7 +16,7 @@ pre.context {
 
 pre.repl {
     margin: -1em -2em;
-    width: 31.7em;
+    width: 26em;
     height: 18em;
     text-align: left;
     border: 0;
@@ -30,7 +30,7 @@ pre.repl.active {
 
 div.live-repl {
     margin: -1em -2em;
-    width: 31.7em;
+    width: 26em;
     height: 18em;
     text-align: left;
 }
