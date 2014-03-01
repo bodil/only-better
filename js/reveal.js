@@ -407,7 +407,7 @@ var Reveal = (function(){
 		function _createBackground( slide, container ) {
 
 			var data = {
-				background: slide.getAttribute( 'data-background' ),
+				background: slide.getAttribute( 'data-background' ) || slide.parentNode.getAttribute('data-background'),
 				backgroundSize: slide.getAttribute( 'data-background-size' ),
 				backgroundImage: slide.getAttribute( 'data-background-image' ),
 				backgroundColor: slide.getAttribute( 'data-background-color' ),
