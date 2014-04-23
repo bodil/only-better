@@ -28,7 +28,7 @@ var repls = {
   },
 
   clojure: {
-    command: "java",
+    command: "/opt/java/bin/java",
     args: ["-classpath",
            "jars/clojure-1.5.1.jar:jars/core.logic-0.8.4.jar",
            "clojure.main"],
@@ -44,7 +44,7 @@ var repls = {
   },
 
   java: {
-    command: "java",
+    command: "/opt/java/bin/java",
     args: ["-jar", "jars/javarepl.jar", "--colors=false"],
     prompt: "java> ",
     chopPrompt: "    | "
@@ -102,11 +102,11 @@ var wrapProcess = function(proc, repl) {
     result.emit("result", {
       error: err
     });
-    console.log("ERR:", err);
     err = "";
   };
 
   proc.stderr.on("data", function(chunk) {
+    console.log("ERR:", chunk);
     err += chunk;
     if (errTimer === null) {
       errTimer = setTimeout(errReport, 100);

@@ -15,8 +15,8 @@ pre.context {
 }
 
 pre.repl {
-    margin: -1em -2em;
-    width: 31.7em;
+    margin: -1em -2.4em;
+    width: 25em;
     height: 18em;
     text-align: left;
     border: 0;
@@ -29,8 +29,8 @@ pre.repl.active {
 }
 
 div.live-repl {
-    margin: -1em -2em;
-    width: 31.7em;
+    margin: -1em -2.4em;
+    width: 25em;
     height: 18em;
     text-align: left;
 }

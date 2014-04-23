@@ -6,11 +6,11 @@ class Number {
   public Number(long number) {
     this.number = number;
   }
-  public long fac() {
-    return (this.number == 0) ? 1 : this.number * new Number(this.number-1).fac();
-  }
   public void set(long n) {
     this.number = n;
+  }
+  public long fac() {
+    return (this.number == 0) ? 1 : this.number * new Number(this.number-1).fac();
   }
   public static void mutableStateIsBad(Number n) {
     n.set(666);

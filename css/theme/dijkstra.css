@@ -5,9 +5,14 @@
 @import url('fonts/Signika/signika.css');
 
 @import url('fonts/Roboto_Slab/robotoslab.css');
+/* Copyright 2013 Bodil Stokke <bodil@bodil.org>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 body {
   font-family: 'Signika', sans-serif;
-  font-size: 36pt;
+  font-size: 34pt;
   font-weight: 200;
   letter-spacing: -0.02em;
   color: #333333;
@@ -80,6 +85,7 @@ body {
   font-family: Dijkstra;
   font-style: normal;
   box-shadow: none;
+  width: 100%;
 }
 .reveal a:not(.image) {
   color: #333333;
